@@ -1,4 +1,4 @@
-import { _decorator, Component, Enum, EventTouch, find, Node, Vec2 } from 'cc';
+import { _decorator, Component, Enum, EventTouch, find, math, Node, Vec2, Vec3 } from 'cc';
 import { Grid2D } from './Grid2D';
 import { Match3UI } from '../Match3UI';
 const { ccclass, property } = _decorator;
@@ -34,7 +34,7 @@ export class Fruit extends Component {
     protected onLoad(): void {
         this.matchUI = find("Canvas").getComponent(Match3UI);
         this.node.on(Node.EventType.TOUCH_START, this.onTouchStart, this);
-        this.node.on(Node.EventType.TOUCH_END, this.onTouchEnd, this);
+        this.node.on(Node.EventType.TOUCH_CANCEL, this.onTouchCancel, this);
     }
 
     public compareTo(other: Fruit){
@@ -43,10 +43,10 @@ export class Fruit extends Component {
 
     public onTouchStart(event : EventTouch){
         this.startPosition = event.getLocation();
+        
     }
 
-
-    public onTouchEnd(event: EventTouch){
+    public onTouchCancel(event: EventTouch){
         this.endPosition = event.getLocation();
         this.movingDecision();
     }
@@ -70,9 +70,24 @@ export class Fruit extends Component {
         }
     }
 
-    protected onDestroy(): void {
+    protected update(dt: number): void {
+        let expectPosition = this.matchUI.GridCoodinator[this.position2D.x][this.position2D.y];
+        let currentPosition = this.node.getPosition();
+
+        let newPosition = currentPosition.lerp(expectPosition, 0.25);
+        this.node.setPosition(newPosition);
+        this.matchUI.AllFruit[this.position2D.x][this.position2D.y] = this;
+    }
+
+    public onDestroy(): void {
         this.node.off(Node.EventType.TOUCH_START, this.onTouchStart, this);
-        this.node.off(Node.EventType.TOUCH_END, this.onTouchEnd, this);
+        this.node.off(Node.EventType.TOUCH_END, this.onTouchCancel, this);
+    }
+
+    public swapTo(other: Fruit) {
+        let temp = this.position2D;
+        this.position2D = other.position2D;
+        other.position2D = temp;
     }
 }
 
