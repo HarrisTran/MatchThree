@@ -74,7 +74,15 @@ export class Fruit extends Component {
         let expectPosition = this.matchUI.GridCoodinator[this.position2D.x][this.position2D.y];
         let currentPosition = this.node.getPosition();
 
-        let newPosition = currentPosition.lerp(expectPosition, 0.25);
+        const t = dt/0.35;
+        const easing = 1 - (1-t)*(1-t);
+
+        let newPosition = new Vec3(
+            math.lerp(currentPosition.x, expectPosition.x, easing),
+            math.lerp(currentPosition.y, expectPosition.y, easing),
+            0
+        );
+
         this.node.setPosition(newPosition);
         this.matchUI.AllFruit[this.position2D.x][this.position2D.y] = this;
     }

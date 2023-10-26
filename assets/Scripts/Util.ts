@@ -11,3 +11,27 @@ export function convertTo2DArray<T>(arr: T[], rows: number, columns: number): T[
 
     return result;
 }
+
+export class DistinctList<T>{
+    private list: Array<T> = [];
+    public constructor(){
+        this.list = new Array<T>();
+    }
+    public add(item: T){
+        if(this.list.indexOf(item) == -1){
+            this.list.push(item);
+        }
+    }
+
+    public clear(): void {
+        this.list = [];
+    }
+
+    public size(): number{
+        return this.list.length;
+    }
+
+    public getList(): Array<T>{
+        return this.list;
+    }
+}
