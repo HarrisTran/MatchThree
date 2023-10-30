@@ -1,11 +1,13 @@
-import { _decorator, Component, error, instantiate, Layout, log, math, Node, Prefab, resources, Vec2, Vec3 } from 'cc';
+import { _decorator, Component, error, instantiate, Layout, log, math, Node, Prefab, resources, size, Size, Vec2, Vec3 } from 'cc';
 import { Fruit, MoveDirection } from './Match3Component/Fruit';
 import { Grid2D } from './Match3Component/Grid2D';
 import { convertTo2DArray, DistinctList } from './Util';
 const { ccclass, property } = _decorator;
 
-@ccclass('Match3UI')
-export class Match3UI extends Component {
+@ccclass('Board')
+export class Board extends Component {
+    @property(Size)
+    private sizeBoard : Size = null;
 
     @property(Node)
     private gridLayout: Node = null;
@@ -16,7 +18,6 @@ export class Match3UI extends Component {
     @property(Prefab)
     private tileBg: Prefab = null;
 
-    @property([Prefab])
     private fruitListPrefabs: Prefab[] = [];
 
     public AllFruit: Fruit[][] = [];
@@ -24,29 +25,36 @@ export class Match3UI extends Component {
     private listAllMatch: DistinctList<Fruit> = new DistinctList<Fruit>();
 
     protected onLoad(): void {
-        this.initializeGridUI();
-        this.initializeTile();
-        console.log(this.AllFruit);
-        
+        resources.loadDir('Prefabs', Prefab, (err: Error, data: Prefab[]) => {
+            if(err) console.error(err);
+            else{
+                for(let prefab of data){
+                    this.fruitListPrefabs.push(prefab);
+                }
+            }
+            this.initializeGridUI();
+            this.initializeTile();
+        });
     }
 
     private initializeGridUI() {
-        for (let i = 0; i < 8; i++) {
-            for (let j = 0; j < 8; j++) {
+        for (let i = 0; i < this.sizeBoard.x; i++) {
+            for (let j = 0; j < this.sizeBoard.y; j++) {
                 let o: Node = instantiate(this.tileBg);
                 o.parent = this.gridLayout;
                 o.name = `Tile ${i},${j}`;
             }
         }
         this.gridLayout.getComponent(Layout).updateLayout();
-        this.GridCoodinator = convertTo2DArray<Vec3>([...this.gridLayout.children].map(child => child.getPosition()), 8, 8);
+        this.GridCoodinator = convertTo2DArray<Vec3>([...this.gridLayout.children].map(child => child.getPosition()), this.sizeBoard.x, this.sizeBoard.y);
     }
 
-    private initializeTile() {
-        this.AllFruit = convertTo2DArray<Fruit>(new Array(64).fill(null), 8, 8);
+    private initializeTile() { 
+        const total = this.sizeBoard.x*this.sizeBoard.y;
+        this.AllFruit = convertTo2DArray<Fruit>(new Array(total).fill(null), this.sizeBoard.x, this.sizeBoard.y);
         for (let i = 0; i < this.gridLayout.children.length; i++) {
-            const x: number = (i / 8) | 0;
-            const y: number = i % 8;
+            const x: number = (i / this.sizeBoard.x) | 0;
+            const y: number = i % this.sizeBoard.y;
             this.spawnFruit(x, y, this.gridLayout.children[i].getPosition());
             if (this.checkMatchAt(x, y, this.AllFruit[x][y])) {
                 this.AllFruit[x][y].node.destroy();
@@ -56,8 +64,10 @@ export class Match3UI extends Component {
     }
 
     private spawnFruit(x: number, y: number, localPos: Vec3) {
-        let o: Node = instantiate(this.fruitListPrefabs[math.randomRangeInt(0, 7)]);
-        o.setPosition(localPos);
+        const localPosWithOffset = new Vec3(localPos.x, localPos.y+200, 0);
+        let lengthOfPrefabsList: number = this.fruitListPrefabs.length;
+        let o: Node = instantiate(this.fruitListPrefabs[math.randomRangeInt(0, lengthOfPrefabsList)]);
+        o.setPosition(localPosWithOffset);
         o.parent = this.tileLayout;
 
         this.AllFruit[x][y] = o.getComponent(Fruit);
@@ -105,21 +115,25 @@ export class Match3UI extends Component {
                 this.listAllMatch.getList().forEach(item => {
                     this.DestroyMatchedFruitAt(item.position2D.x, item.position2D.y);
                 });
-
                 setTimeout(() => {
                     this.DropColumn();
-                }, 200);
-            }else{
-                setTimeout(() => {
-                    if(otherFruit){
-                        f.swapTo(otherFruit);
-                    }
                 }, 100);
+            }else{
+                f.swapTo(otherFruit);
             }
-        }, 100, this);
-        // setTimeout(() => {
-        //     this.DropColumn();
-        // }, 200);
+        }, 300, this);
+    }
+
+    private DestroyAllMatches() {
+        this.FindAllMatch();
+        if (this.listAllMatch.size() > 0) {
+            this.listAllMatch.getList().forEach(item => {
+                this.DestroyMatchedFruitAt(item.position2D.x, item.position2D.y);
+            });
+            setTimeout(() => {
+                this.DropColumn();
+            }, 100);
+        }
     }
 
     private FindAllMatch() {
@@ -184,7 +198,7 @@ export class Match3UI extends Component {
         setTimeout(() => {
             this.FullfillColumn();
         }, 200);
-    }
+    }2
 
     private FullfillColumn(){
         for (let i = 0; i < 8; i++) {
@@ -194,20 +208,9 @@ export class Match3UI extends Component {
                 }
             }
         }
-
-        setTimeout(() => {
-            console.log("reCheckFruit")
-            this.FindAllMatch();
-            if (this.listAllMatch.size() > 0) {
-                this.listAllMatch.getList().forEach(item => {
-                    this.DestroyMatchedFruitAt(item.position2D.x, item.position2D.y);
-                });
-
-                setTimeout(() => {
-                    this.DropColumn();
-                }, 200);
-            }
-        }, 100, this);
+        setTimeout(()=>{
+            this.DestroyAllMatches();
+        }, 500, this);
     }
 }
 

@@ -1,6 +1,6 @@
 import { _decorator, Component, Enum, EventTouch, find, math, Node, Vec2, Vec3 } from 'cc';
 import { Grid2D } from './Grid2D';
-import { Match3UI } from '../Match3UI';
+import { Board } from '../Board';
 const { ccclass, property } = _decorator;
 
 export enum TypeFruit{
@@ -29,16 +29,21 @@ export class Fruit extends Component {
 
     private startPosition: Vec2;
     private endPosition: Vec2;
-    private matchUI : Match3UI;
+    private matchUI : Board;
+    private timeThreshold: number = 0.25;
 
     protected onLoad(): void {
-        this.matchUI = find("Canvas").getComponent(Match3UI);
+        this.matchUI = find("Canvas").getComponent(Board);
         this.node.on(Node.EventType.TOUCH_START, this.onTouchStart, this);
         this.node.on(Node.EventType.TOUCH_CANCEL, this.onTouchCancel, this);
     }
 
     public compareTo(other: Fruit){
         return this.typeFruit === other.typeFruit;
+    }
+
+    protected start(): void {
+        console.log("as")
     }
 
     public onTouchStart(event : EventTouch){
@@ -74,7 +79,7 @@ export class Fruit extends Component {
         let expectPosition = this.matchUI.GridCoodinator[this.position2D.x][this.position2D.y];
         let currentPosition = this.node.getPosition();
 
-        const t = dt/0.35;
+        const t = dt/this.timeThreshold;
         const easing = 1 - (1-t)*(1-t);
 
         let newPosition = new Vec3(
