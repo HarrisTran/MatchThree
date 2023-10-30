@@ -1,3 +1,5 @@
+import { math } from "cc";
+
 export function convertTo2DArray<T>(arr: T[], rows: number, columns: number): T[][] {
     if (arr.length !== rows * columns) {
         throw new Error("Invalid input: 1D array cannot be evenly divided into 2D array.");
@@ -10,6 +12,16 @@ export function convertTo2DArray<T>(arr: T[], rows: number, columns: number): T[
     }
 
     return result;
+}
+
+export function randomInRange<T>(arr: T[]): T {
+    if (arr.length == 0) {
+        throw new Error("Array cannot be get random");
+    }
+
+    const length = arr.length;
+
+    return arr[math.randomRangeInt(0,length)];
 }
 
 export class DistinctList<T>{

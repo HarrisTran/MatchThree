@@ -1,0 +1,84 @@
+import { _decorator, Component, director, find, instantiate, Node, Prefab, resources } from 'cc';
+import { GameOverPopup } from './GameOverPopup';
+const { ccclass, property } = _decorator;
+
+
+///////////////////////////// Match 3:
+
+
+// - Flow game (Man hình menu (PLay) => Ingame => GameOver Trả điểm)
+
+// - Hiển thị điểm
+
+// - Timer (đếm ngược đến khi game kết thúc - 60s)
+
+// - Item đặc biệt
+
+// - Item ngang/dọc
+
+
+@ccclass('MainGameManager')
+export class MainGameManager extends Component {
+    @property(Prefab)
+    private gameOverPopup : Prefab = null;
+
+    private static _instance : MainGameManager;
+    private static readonly NORMAL_FRUIT_PREFAB_PATH: string = "NormalFruit";
+    private static readonly SPECIAL_FRUIT_PREFAB_PATH: string = "SpecialFruit";
+
+    private fruitListPrefabs: Prefab[] = [];
+    private specialFruitListPrefabs: Prefab[] = [];
+
+    public static get instance(): MainGameManager{
+        return this._instance;
+    }
+
+    protected onLoad(): void {
+        MainGameManager._instance = this;
+        director.addPersistRootNode(this.node);
+    }
+
+    start() {
+        resources.loadDir(MainGameManager.NORMAL_FRUIT_PREFAB_PATH, Prefab, (err: Error, data: Prefab[]) => {
+            if(err) console.error("Can't load prefabs from empty path", err);
+            else{
+                for(let prefab of data){
+                    this.fruitListPrefabs.push(prefab);
+                }
+            }
+        });
+
+        resources.loadDir(MainGameManager.SPECIAL_FRUIT_PREFAB_PATH, Prefab, (err: Error, data: Prefab[]) => {
+            if(err) console.error("Can't load prefabs from empty path", err);
+            else{
+                for(let prefab of data){
+                    this.specialFruitListPrefabs.push(prefab);
+                }
+            }
+        });
+    }
+
+    update(deltaTime: number) {
+        
+    }
+
+    onClickStartButton(){
+        director.loadScene("GamePlay");
+    }
+
+    public getNormalFruitListPrefab() : Prefab[] {
+        return this.fruitListPrefabs;
+    }
+
+    public getSpecialFruitListPrefab() : Prefab[] {
+        return this.specialFruitListPrefabs;
+    }
+
+    public onShowGameOverPopup(){
+        let popup = instantiate(this.gameOverPopup);
+        popup.parent = find("Canvas");
+        popup.getComponent(GameOverPopup).onShowStart();
+    }
+}
+
+

@@ -1,7 +1,8 @@
 import { _decorator, Component, error, instantiate, Layout, log, math, Node, Prefab, resources, size, Size, Vec2, Vec3 } from 'cc';
 import { Fruit, MoveDirection } from './Match3Component/Fruit';
 import { Grid2D } from './Match3Component/Grid2D';
-import { convertTo2DArray, DistinctList } from './Util';
+import { convertTo2DArray, DistinctList, randomInRange } from './Util';
+import { MainGameManager } from './MainGameManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Board')
@@ -18,23 +19,16 @@ export class Board extends Component {
     @property(Prefab)
     private tileBg: Prefab = null;
 
-    private fruitListPrefabs: Prefab[] = [];
+    //private fruitListPrefabs: Prefab[] = [];
+    //private specialFruitListPrefabs: Prefab[] = [];
 
     public AllFruit: Fruit[][] = [];
     public GridCoodinator: Vec3[][] = [];
     private listAllMatch: DistinctList<Fruit> = new DistinctList<Fruit>();
 
     protected onLoad(): void {
-        resources.loadDir('Prefabs', Prefab, (err: Error, data: Prefab[]) => {
-            if(err) console.error(err);
-            else{
-                for(let prefab of data){
-                    this.fruitListPrefabs.push(prefab);
-                }
-            }
-            this.initializeGridUI();
-            this.initializeTile();
-        });
+        this.initializeGridUI();
+        this.initializeTile();
     }
 
     private initializeGridUI() {
@@ -64,9 +58,9 @@ export class Board extends Component {
     }
 
     private spawnFruit(x: number, y: number, localPos: Vec3) {
+        const lst = MainGameManager.instance.getNormalFruitListPrefab();
         const localPosWithOffset = new Vec3(localPos.x, localPos.y+200, 0);
-        let lengthOfPrefabsList: number = this.fruitListPrefabs.length;
-        let o: Node = instantiate(this.fruitListPrefabs[math.randomRangeInt(0, lengthOfPrefabsList)]);
+        let o: Node = instantiate(randomInRange(lst));
         o.setPosition(localPosWithOffset);
         o.parent = this.tileLayout;
 
@@ -198,7 +192,7 @@ export class Board extends Component {
         setTimeout(() => {
             this.FullfillColumn();
         }, 200);
-    }2
+    }
 
     private FullfillColumn(){
         for (let i = 0; i < 8; i++) {
@@ -210,7 +204,7 @@ export class Board extends Component {
         }
         setTimeout(()=>{
             this.DestroyAllMatches();
-        }, 500, this);
+        }, 700, this);
     }
 }
 
