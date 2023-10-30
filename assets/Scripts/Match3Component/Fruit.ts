@@ -1,4 +1,4 @@
-import { _decorator, Component, Enum, EventTouch, find, math, Node, Vec2, Vec3 } from 'cc';
+import { _decorator, CCInteger, Component, Enum, EventTouch, find, math, Node, Vec2, Vec3 } from 'cc';
 import { Grid2D } from './Grid2D';
 import { Board } from '../Board';
 const { ccclass, property } = _decorator;
@@ -24,6 +24,9 @@ export enum MoveDirection {
 export class Fruit extends Component {
     @property({type: Enum(TypeFruit)})
     public typeFruit: TypeFruit;
+
+    @property(CCInteger)
+    private scoreReward: number = 0;
 
     public position2D: Grid2D = null;
 
@@ -101,6 +104,10 @@ export class Fruit extends Component {
         let temp = this.position2D;
         this.position2D = other.position2D;
         other.position2D = temp;
+    }
+
+    public     getScoreReward(){
+        return this.scoreReward;
     }
 }
 

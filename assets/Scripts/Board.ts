@@ -1,4 +1,4 @@
-import { _decorator, Component, error, instantiate, Layout, log, math, Node, Prefab, resources, size, Size, Vec2, Vec3 } from 'cc';
+import { _decorator, Component, error, instantiate, Label, Layout, log, math, Node, Prefab, resources, size, Size, Vec2, Vec3 } from 'cc';
 import { Fruit, MoveDirection } from './Match3Component/Fruit';
 import { Grid2D } from './Match3Component/Grid2D';
 import { convertTo2DArray, DistinctList, randomInRange } from './Util';
@@ -19,8 +19,8 @@ export class Board extends Component {
     @property(Prefab)
     private tileBg: Prefab = null;
 
-    //private fruitListPrefabs: Prefab[] = [];
-    //private specialFruitListPrefabs: Prefab[] = [];
+    @property(Label)
+    private scoreText: Label = null;
 
     public AllFruit: Fruit[][] = [];
     public GridCoodinator: Vec3[][] = [];
@@ -39,6 +39,7 @@ export class Board extends Component {
                 o.name = `Tile ${i},${j}`;
             }
         }
+        this.setScore();
         this.gridLayout.getComponent(Layout).updateLayout();
         this.GridCoodinator = convertTo2DArray<Vec3>([...this.gridLayout.children].map(child => child.getPosition()), this.sizeBoard.x, this.sizeBoard.y);
     }
@@ -172,6 +173,8 @@ export class Board extends Component {
         let fruit = this.AllFruit[x][y];
         if (fruit) {
             fruit.node.destroy();
+            MainGameManager.instance.Score = fruit.getScoreReward();
+            this.setScore();
             this.AllFruit[x][y] = null;
         }
     }
@@ -204,7 +207,11 @@ export class Board extends Component {
         }
         setTimeout(()=>{
             this.DestroyAllMatches();
-        }, 700, this);
+        }, 300, this);
+    }
+
+    private setScore(){
+        this.scoreText.string = MainGameManager.instance.Score.toString();
     }
 }
 

@@ -1080,6 +1080,9 @@
       "__uuid__": "0387c7b2-f499-429b-bc59-7a2dbee3415e",
       "__expectedType__": "cc.Prefab"
     },
+    "scoreText": {
+      "__id__": 17
+    },
     "_id": "25VpbJf3BA1KW/ki53XAlq"
   },
   {

@@ -28,12 +28,15 @@ export class MainGameManager extends Component {
 
     private fruitListPrefabs: Prefab[] = [];
     private specialFruitListPrefabs: Prefab[] = [];
+    private score: number = 0;
+
 
     public static get instance(): MainGameManager{
         return this._instance;
     }
 
     protected onLoad(): void {
+        this.score = 0;
         MainGameManager._instance = this;
         director.addPersistRootNode(this.node);
     }
@@ -66,6 +69,14 @@ export class MainGameManager extends Component {
         director.loadScene("GamePlay");
     }
 
+    public get Score(){
+        return this.score;
+    }
+
+    public set Score(score: number) {
+        this.score += score;
+    }
+
     public getNormalFruitListPrefab() : Prefab[] {
         return this.fruitListPrefabs;
     }
@@ -77,7 +88,7 @@ export class MainGameManager extends Component {
     public onShowGameOverPopup(){
         let popup = instantiate(this.gameOverPopup);
         popup.parent = find("Canvas");
-        popup.getComponent(GameOverPopup).onShowStart();
+        popup.getComponent(GameOverPopup).onShowStart(this.Score);
     }
 }
 
