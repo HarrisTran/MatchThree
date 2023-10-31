@@ -45,13 +45,23 @@ export class Fruit extends Component {
         return this.typeFruit === other.typeFruit;
     }
 
-    protected start(): void {
-        console.log("as")
-    }
-
     public onTouchStart(event : EventTouch){
         this.startPosition = event.getLocation();
-        
+    }
+
+    public swapTo(other: Fruit) {
+        if(!other) return;
+        let temp = this.position2D;
+        this.moveTo(other.position2D);
+        other.moveTo(temp);
+    }
+
+    public moveTo(newPos: Grid2D){
+        this.position2D = newPos;
+    }
+
+    public getScoreReward(){
+        return this.scoreReward;
     }
 
     public onTouchCancel(event: EventTouch){
@@ -65,15 +75,15 @@ export class Fruit extends Component {
 
         if(Math.abs(deltaX) > Math.abs(deltaY)){
             if(deltaX > 0){
-                this.matchUI.swapFruit(this,MoveDirection.RIGHT);
+                this.matchUI.swapTo(this,MoveDirection.RIGHT);
             }else{
-                this.matchUI.swapFruit(this,MoveDirection.LEFT);
+                this.matchUI.swapTo(this,MoveDirection.LEFT);
             }
         }else{
             if(deltaY > 0){
-                this.matchUI.swapFruit(this,MoveDirection.UP);
+                this.matchUI.swapTo(this,MoveDirection.UP);
             }else{
-                this.matchUI.swapFruit(this,MoveDirection.DOWN);
+                this.matchUI.swapTo(this,MoveDirection.DOWN);
             }
         }
     }
@@ -98,16 +108,6 @@ export class Fruit extends Component {
     public onDestroy(): void {
         this.node.off(Node.EventType.TOUCH_START, this.onTouchStart, this);
         this.node.off(Node.EventType.TOUCH_END, this.onTouchCancel, this);
-    }
-
-    public swapTo(other: Fruit) {
-        let temp = this.position2D;
-        this.position2D = other.position2D;
-        other.position2D = temp;
-    }
-
-    public     getScoreReward(){
-        return this.scoreReward;
     }
 }
 
