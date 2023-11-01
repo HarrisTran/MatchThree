@@ -27,7 +27,9 @@ export class Board extends Component {
 
     public AllFruit: Fruit[][] = [];
     public GridCoodinator: Vec3[][] = [];
-    public listAllMatch: DistinctList<Fruit> = new DistinctList<Fruit>();
+
+    public firstChoice: Grid2D = null;
+    public secondChoice: Grid2D = null;
 
     protected onLoad(): void {
         this.matcher = find("Canvas/TileLayout").getComponent("MatchMachine") as InterfaceMatchMachine;
@@ -91,6 +93,7 @@ export class Board extends Component {
 
     public swapTo(f: Fruit, m: MoveDirection) {
         let otherFruit: Fruit = null;
+        this.firstChoice = f.position2D;
 
         if (m == MoveDirection.RIGHT && f.position2D.y < 7) {
             otherFruit = this.AllFruit[f.position2D.x][f.position2D.y + 1];
@@ -107,6 +110,12 @@ export class Board extends Component {
         else if (m == MoveDirection.UP && f.position2D.x > 0) {
             otherFruit = this.AllFruit[f.position2D.x - 1][f.position2D.y];
             f.swapTo(otherFruit);
+        }
+
+        if(otherFruit){
+            this.secondChoice = otherFruit.position2D;
+        }else{
+            this.secondChoice = null;
         }
 
         setTimeout(() => {
@@ -130,15 +139,12 @@ export class Board extends Component {
         fruits.forEach(item => {
             this.DestroyMatchedFruitAt(item.position2D.x, item.position2D.y);
         });
-
-        setTimeout(() => {
-            this.DropColumn();
-        }, 300);
+        this.DropColumn();
     }
 
-    private DestroyMatchedFruitAt(x: number, y: number) {
+    private DestroyMatchedFruitAt(x: number, y: number){
         let fruit = this.AllFruit[x][y];
-        if (fruit) {
+        if (fruit && fruit.isMatched) {
             fruit.node.destroy();
             MainGameManager.instance.Score = fruit.getScoreReward();
             this.setScore();
@@ -178,6 +184,18 @@ export class Board extends Component {
                 this.DestroyAllMatches(lstMatch);
             }
         }, 200, this);
+    }
+
+    public IsPositionOnBoard(lookupPosition: Grid2D): boolean {
+        return (0 <= lookupPosition.x && lookupPosition.x < this.sizeBoard.x) && (0 <= lookupPosition.y && lookupPosition.y < this.sizeBoard.y);
+    }
+
+    public getRow(i : number){
+        return this.AllFruit[i];
+    }
+
+    public getColumn(i: number){
+        return this.AllFruit.map(row => row[i]);
     }
 
     private setScore(){

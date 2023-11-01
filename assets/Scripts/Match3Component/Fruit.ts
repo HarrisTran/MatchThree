@@ -1,6 +1,7 @@
-import { _decorator, CCInteger, Component, Enum, EventTouch, find, math, Node, Vec2, Vec3 } from 'cc';
+import { _decorator, CCInteger, Component, Enum, EventTouch, find, math, Node, tween, Vec2, Vec3 } from 'cc';
 import { Grid2D } from './Grid2D';
 import { Board } from '../Board';
+import { easingMovement } from '../Util';
 const { ccclass, property } = _decorator;
 
 export enum TypeFruit{
@@ -30,6 +31,7 @@ export class Fruit extends Component {
 
     public position2D: Grid2D = null;
 
+    public isMatched: boolean = false;
     private startPosition: Vec2;
     private endPosition: Vec2;
     private matchUI : Board;
@@ -92,14 +94,9 @@ export class Fruit extends Component {
         let expectPosition = this.matchUI.GridCoodinator[this.position2D.x][this.position2D.y];
         let currentPosition = this.node.getPosition();
 
-        const t = dt/this.timeThreshold;
-        const easing = 1 - (1-t)*(1-t);
-
-        let newPosition = new Vec3(
-            math.lerp(currentPosition.x, expectPosition.x, easing),
-            math.lerp(currentPosition.y, expectPosition.y, easing),
-            0
-        );
+        let newPosition = easingMovement(currentPosition,expectPosition,dt/this.timeThreshold,(x:number)=>{
+            return 1 - Math.pow(1-x,3);
+        })
 
         this.node.setPosition(newPosition);
         this.matchUI.AllFruit[this.position2D.x][this.position2D.y] = this;
@@ -109,6 +106,7 @@ export class Fruit extends Component {
         this.node.off(Node.EventType.TOUCH_START, this.onTouchStart, this);
         this.node.off(Node.EventType.TOUCH_END, this.onTouchCancel, this);
     }
+
 }
 
 
