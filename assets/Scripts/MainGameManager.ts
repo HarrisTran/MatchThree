@@ -22,9 +22,18 @@ export class MainGameManager extends Component {
     @property(Prefab)
     private gameOverPopup : Prefab = null;
 
+    @property({group: {name: "Special Prefabs", id : "1"}, type: Prefab})
+    public horizonalRocket : Prefab = null;
+
+    @property({group: {name: "Special Prefabs", id : "1"}, type: Prefab})
+    public verticalRocket : Prefab = null;
+
+    @property({group: {name: "Special Prefabs", id : "1"}, type: Prefab})
+    public rainbowBomb : Prefab = null;
+
+
     private static _instance : MainGameManager;
     private static readonly NORMAL_FRUIT_PREFAB_PATH: string = "NormalFruit";
-    private static readonly SPECIAL_FRUIT_PREFAB_PATH: string = "SpecialFruit";
 
     private fruitListPrefabs: Prefab[] = [];
     private specialFruitListPrefabs: Prefab[] = [];
@@ -50,19 +59,6 @@ export class MainGameManager extends Component {
                 }
             }
         });
-
-        resources.loadDir(MainGameManager.SPECIAL_FRUIT_PREFAB_PATH, Prefab, (err: Error, data: Prefab[]) => {
-            if(err) console.error("Can't load prefabs from empty path", err);
-            else{
-                for(let prefab of data){
-                    this.specialFruitListPrefabs.push(prefab);
-                }
-            }
-        });
-    }
-
-    update(deltaTime: number) {
-        
     }
 
     onClickStartButton(){

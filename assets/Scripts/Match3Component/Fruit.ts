@@ -12,6 +12,9 @@ export enum TypeFruit{
     GRAPES ,
     MELON ,
     ORANGE ,
+    BOMB_VERTICAL ,
+    BOMB_HORIZONAL ,
+    RAINBOW ,
 }
 
 export enum MoveDirection {
@@ -32,8 +35,8 @@ export class Fruit extends Component {
     public position2D: Grid2D = null;
 
     public isMatched: boolean = false;
-    private startPosition: Vec2;
-    private endPosition: Vec2;
+    private startPosition: Vec2 = null;
+    private endPosition: Vec2 = null;
     private matchUI : Board;
     private timeThreshold: number = 0.25;
 
@@ -44,10 +47,11 @@ export class Fruit extends Component {
     }
 
     public compareTo(other: Fruit){
+        if(!other) return false;
         return this.typeFruit === other.typeFruit;
     }
 
-    public onTouchStart(event : EventTouch){
+    protected onTouchStart(event : EventTouch){
         this.startPosition = event.getLocation();
     }
 
@@ -58,7 +62,7 @@ export class Fruit extends Component {
         other.moveTo(temp);
     }
 
-    public moveTo(newPos: Grid2D){
+    protected moveTo(newPos: Grid2D){
         this.position2D = newPos;
     }
 
@@ -66,12 +70,12 @@ export class Fruit extends Component {
         return this.scoreReward;
     }
 
-    public onTouchCancel(event: EventTouch){
+    protected onTouchCancel(event: EventTouch){
         this.endPosition = event.getLocation();
         this.movingDecision();
     }
 
-    private movingDecision(){
+    protected movingDecision(){
         const deltaX = this.endPosition.x - this.startPosition.x;
         const deltaY = this.endPosition.y - this.startPosition.y;
 
@@ -102,7 +106,7 @@ export class Fruit extends Component {
         this.matchUI.AllFruit[this.position2D.x][this.position2D.y] = this;
     }
 
-    public onDestroy(): void {
+    protected onDestroy(): void {
         this.node.off(Node.EventType.TOUCH_START, this.onTouchStart, this);
         this.node.off(Node.EventType.TOUCH_END, this.onTouchCancel, this);
     }
