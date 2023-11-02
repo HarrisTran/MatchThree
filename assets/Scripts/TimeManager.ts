@@ -11,7 +11,7 @@ export class TimeManager extends Component {
     private _isActive: boolean = false;
 
     protected onLoad(): void {
-        this.startScreen(90);
+        this.startScreen(200);
     }
 
     public startScreen(time: number){

@@ -34,6 +34,7 @@ export class Fruit extends Component {
 
     public position2D: Grid2D = null;
 
+    public isNormalType: boolean = true;
     public isMatched: boolean = false;
     private startPosition: Vec2 = null;
     private endPosition: Vec2 = null;

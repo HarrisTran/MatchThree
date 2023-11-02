@@ -45,7 +45,6 @@ export class MatchMachine extends Component {
             if (this.board.IsPositionOnBoard(new Grid2D(currentRow, currentCol)) && fruit.compareTo(this.board.AllFruit[currentRow][currentCol])) {
                 matchCount ++;
                 matchedPositions.push(this.board.AllFruit[currentRow][currentCol]);
-                console.log(matchedPositions.length);
                 
             }else{
                 break;
@@ -58,7 +57,6 @@ export class MatchMachine extends Component {
             if (this.board.IsPositionOnBoard(new Grid2D(currentRow, currentCol)) && fruit.compareTo(this.board.AllFruit[currentRow][currentCol])) {
                 matchCount ++;
                 matchedPositions.push(this.board.AllFruit[currentRow][currentCol]);
-                console.log(matchedPositions.length);
             }else{
                 break;
             }

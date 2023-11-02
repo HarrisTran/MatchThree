@@ -6,4 +6,12 @@ export class Grid2D  {
         this.x = x;
         this.y = y;
     }
+
+    public add(other: Grid2D){
+        return new Grid2D(this.x + other.x, this.y + other.y);
+    }
+
+    public clone(){
+        return new Grid2D(this.x, this.y);
+    }
 }
