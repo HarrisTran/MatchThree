@@ -1,9 +1,9 @@
-import { _decorator, Component,find, instantiate, Label, Layout, Node, Prefab, Size, Vec3 } from 'cc';
+import { _decorator, Component, find, instantiate, Label, Layout, Node, Prefab, Size, Vec3 } from 'cc';
 import { Fruit, MoveDirection, TypeFruit } from './Match3Component/Fruit';
 import { Grid2D } from './Match3Component/Grid2D';
 import { convertTo2DArray, delay, DistinctList, randomInRange } from './Util';
 import { MainGameManager } from './MainGameManager';
-import { InterfaceMatchMachine} from './MatchMachine';
+import { InterfaceMatchMachine } from './MatchMachine';
 import { NormalFruit } from './Match3Component/NormalFruit';
 import { SpecialFruit } from './Match3Component/SpecialFruit';
 const { ccclass, property } = _decorator;
@@ -11,7 +11,7 @@ const { ccclass, property } = _decorator;
 @ccclass('Board')
 export class Board extends Component {
     @property(Size)
-    private sizeBoard : Size = null;
+    private sizeBoard: Size = null;
 
     @property(Node)
     private gridLayout: Node = null;
@@ -27,8 +27,8 @@ export class Board extends Component {
 
     private matcher: InterfaceMatchMachine = null;
 
-    private firstChoosed: Grid2D = null;
-    private secondChoosed: Grid2D = null;
+    private firstChoosed: Fruit = null;
+    private secondChoosed: Fruit = null;
 
     public AllFruit: Fruit[][] = [];
     public GridCoodinator: Vec3[][] = [];
@@ -52,8 +52,8 @@ export class Board extends Component {
         this.GridCoodinator = convertTo2DArray<Vec3>([...this.gridLayout.children].map(child => child.getPosition()), this.sizeBoard.x, this.sizeBoard.y);
     }
 
-    private initializeTile() { 
-        const total = this.sizeBoard.x*this.sizeBoard.y;
+    private initializeTile() {
+        const total = this.sizeBoard.x * this.sizeBoard.y;
         this.AllFruit = convertTo2DArray<Fruit>(new Array(total).fill(null), this.sizeBoard.x, this.sizeBoard.y);
         for (let i = 0; i < this.gridLayout.children.length; i++) {
             const x: number = (i / this.sizeBoard.x) | 0;
@@ -68,7 +68,7 @@ export class Board extends Component {
 
     private spawnNormalFruit(x: number, y: number, localPos: Vec3) {
         const lst = MainGameManager.instance.getNormalFruitListPrefab();
-        const localPosWithOffset = new Vec3(localPos.x, localPos.y+200, 0);
+        const localPosWithOffset = new Vec3(localPos.x, localPos.y + 200, 0);
         let o: Node = instantiate(randomInRange(lst));
         o.setPosition(localPosWithOffset);
         o.parent = this.tileLayout;
@@ -78,16 +78,16 @@ export class Board extends Component {
         this.AllFruit[x][y].position2D = new Grid2D(x, y);
     }
 
-    private spawnSpecicalFruit(x: number, y: number, localPos: Vec3, specialType : TypeFruit) {
-        const localPosWithOffset = new Vec3(localPos.x, localPos.y+200, 0);
+    private spawnSpecicalFruit(x: number, y: number, localPos: Vec3, specialType: TypeFruit) {
+        const localPosWithOffset = new Vec3(localPos.x, localPos.y + 200, 0);
         let o: Node = null;
-        if(specialType === TypeFruit.BOMB_HORIZONAL){
+        if (specialType === TypeFruit.BOMB_HORIZONAL) {
             o = instantiate(MainGameManager.instance.horizonalRocket);
         }
-        else if(specialType === TypeFruit.BOMB_VERTICAL){
+        else if (specialType === TypeFruit.BOMB_VERTICAL) {
             o = instantiate(MainGameManager.instance.verticalRocket);
         }
-        else if(specialType === TypeFruit.RAINBOW){
+        else if (specialType === TypeFruit.RAINBOW) {
             o = instantiate(MainGameManager.instance.rainbowBomb);
         }
         o.setPosition(localPosWithOffset);
@@ -134,8 +134,8 @@ export class Board extends Component {
             f.swapTo(otherFruit);
         }
 
-        this.firstChoosed = otherFruit.position2D;
-        this.secondChoosed = f.position2D;
+        this.firstChoosed = otherFruit;
+        this.secondChoosed = f;
 
         await delay(200);
 
@@ -144,26 +144,40 @@ export class Board extends Component {
         }
     }
 
-    private onSwapEvent(){
-        
+
+    private CheckMove(): boolean {
+        let isCanMove: boolean = false;
+        let lstMatch = this.matcher.ListAllMatch.getList();
+
+        if(this.secondChoosed.isNormalType && this.firstChoosed.isNormalType){
+            if (lstMatch?.length > 0) {
+                this.DestroyAllMatches(lstMatch);
+                isCanMove = true;
+                //return true;
+            } else {
+                isCanMove = false;
+            }
+        }else{
+            this.DestroyAllMatches(this.matcher.MarkAllRow(0));
+            isCanMove = true;
+        }
+
+        return isCanMove;
     }
 
-    private CheckMove() : boolean{
-        const lstMatch = this.matcher.ListAllMatch.getList();
+    private RemoveForSpecialFruit(){
+        if(this.secondChoosed.IsStraingerBomb() && this.firstChoosed.IsStraingerBomb()){
+            this.DestroyAllMatches(this.matcher.MarkAllRow(this.secondChoosed.position2D.x));
+            this.DestroyAllMatches(this.matcher.MarkAllColumn(this.secondChoosed.position2D.y));
+        }else if (this.secondChoosed.IsStraingerBomb()){
 
-        if(lstMatch?.length > 0) {
-            this.DestroyAllMatches(lstMatch);
-            return true;
-        }else{
-            return false;
         }
     }
 
     private async DestroyAllMatches(fruits: Fruit[]) {
-        
-        for(let o of fruits)
-        {
-            this.DestroyMatchedFruitAt(o.position2D.x,o.position2D.y);
+
+        for (let o of fruits) {
+            this.DestroyMatchedFruitAt(o.position2D.x, o.position2D.y);
         }
 
         this.GenerateSpecialCombos();
@@ -175,9 +189,9 @@ export class Board extends Component {
 
     private GenerateSpecialCombos() {
         for (let c of this.matcher.ListAllSpecialPostion.getList()) {
-            
-            if(c.typeTile == TypeFruit.BOMB_HORIZONAL){
-                const position =  c.tileCluster[0].position2D;
+
+            if (c.typeTile == TypeFruit.BOMB_HORIZONAL) {
+                const position = c.tileCluster[0].position2D;
                 this.spawnSpecicalFruit(position.x, position.y, this.GridCoodinator[position.x][position.y], TypeFruit.BOMB_HORIZONAL);
             }
             else if (c.typeTile == TypeFruit.BOMB_VERTICAL) {
@@ -191,7 +205,7 @@ export class Board extends Component {
         }
     }
 
-    private DestroyMatchedFruitAt(x: number, y: number){
+    private DestroyMatchedFruitAt(x: number, y: number) {
         let fruit = this.AllFruit[x][y];
         if (fruit && fruit.isMatched) {
             fruit.node.destroy();
@@ -201,15 +215,15 @@ export class Board extends Component {
         }
     }
 
-    private async DropColumn(){
+    private async DropColumn() {
         for (let i = 0; i < 8; i++) {
             let counter = 0;
             for (let j = 7; j >= 0; j--) {
-                if(this.AllFruit[j][i] == null){
+                if (this.AllFruit[j][i] == null) {
                     counter++;
-                }else{
+                } else {
                     this.AllFruit[j][i].position2D.x += counter;
-                    this.AllFruit[j+counter][i] = this.AllFruit[j][i];
+                    this.AllFruit[j + counter][i] = this.AllFruit[j][i];
                     this.AllFruit[j][i] = null;
                 }
             }
@@ -241,19 +255,19 @@ export class Board extends Component {
         return (0 <= lookupPosition.x && lookupPosition.x < this.sizeBoard.x) && (0 <= lookupPosition.y && lookupPosition.y < this.sizeBoard.y);
     }
 
-    public getRow(i : number){
+    public getRow(i: number) {
         return this.AllFruit[i];
     }
 
-    public getColumn(i: number){
+    public getColumn(i: number) {
         return this.AllFruit.map(row => row[i]);
     }
 
-    private getFruitOnPostion(pos: Grid2D){
+    private getFruitOnPostion(pos: Grid2D) {
         return this.AllFruit[pos.x][pos.y];
     }
 
-    private setScore(){
+    private setScore() {
         this.scoreText.string = MainGameManager.instance.Score.toString();
     }
 }

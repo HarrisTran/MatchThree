@@ -112,6 +112,10 @@ export class Fruit extends Component {
         this.node.off(Node.EventType.TOUCH_END, this.onTouchCancel, this);
     }
 
+    public IsStraingerBomb(): boolean{
+        return this.typeFruit == TypeFruit.BOMB_HORIZONAL || this.typeFruit == TypeFruit.BOMB_VERTICAL;
+    }
+
 }
 
 
