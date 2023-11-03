@@ -1,4 +1,6 @@
 import { Vec3, math } from "cc";
+import { Grid2D } from "./Match3Component/Grid2D";
+import { PredefinedTetrominoData } from "./Match3Component/TetrominoDefinedData";
 
 export function convertTo2DArray<T>(arr: T[], rows: number, columns: number): T[][] {
     if (arr.length !== rows * columns) {
@@ -14,21 +16,25 @@ export function convertTo2DArray<T>(arr: T[], rows: number, columns: number): T[
     return result;
 }
 
-export function areAllElementsSame<T, K extends keyof T>(arr: T[], attribute: K): boolean {
-    if (arr.length === 0) {
-        return true; // Return true if the array is empty
+
+/**
+* This function check if array of point is on single line.
+* @param {Grid2D []} arrayPoints
+* @returns {number} Return 1 if horizonal, 0 if vertical and -1 if non collinear
+* @author HarrisTran
+*/
+export function areCollinearPoints(arrayPoints: Grid2D[]){
+    const isHorizontal = arrayPoints.every(pos => pos.x === arrayPoints[0].x);
+    const isVertical = arrayPoints.every(pos => pos.y === arrayPoints[0].y);
+    if(isHorizontal){
+        return 1;
+    }else if(isVertical){
+        return 0;
+    }else{
+        return -1;
     }
-
-    const firstElementValue = arr[0][attribute]; // Get the value of the attribute for the first element
-
-    for (let i = 1; i < arr.length; i++) {
-        if (arr[i][attribute] !== firstElementValue) {
-            return false; // Return false if any elements have a different attribute value
-        }
-    }
-
-    return true; // Return true if all elements have the same attribute value
 }
+
 
 
 export function randomInRange<T>(arr: T[]): T {

@@ -38,7 +38,7 @@ export class Fruit extends Component {
     public isMatched: boolean = false;
     private startPosition: Vec2 = null;
     private endPosition: Vec2 = null;
-    private matchUI : Board;
+    protected matchUI : Board;
     private timeThreshold: number = 0.25;
 
     protected onLoad(): void {

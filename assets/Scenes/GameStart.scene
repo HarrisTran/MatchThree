@@ -3,7 +3,6 @@
     "__type__": "cc.SceneAsset",
     "_name": "GameStart",
     "_objFlags": 0,
-    "__editorExtras__": {},
     "_native": "",
     "scene": {
       "__id__": 1
@@ -166,7 +165,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 540,
-      "y": 960.0000000000001,
+      "y": 959.9999999999999,
       "z": 0
     },
     "_lrot": {
@@ -277,8 +276,6 @@
     "_screenScale": 1,
     "_visibility": 41943040,
     "_targetTexture": null,
-    "_postProcess": null,
-    "_usePostProcess": false,
     "_cameraType": -1,
     "_trackingType": 0,
     "_id": "d9wlisM9xIW7BqTnBLLKfV"
@@ -453,7 +450,7 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 126.708984375,
+      "width": 126.71,
       "height": 126
     },
     "_anchorPoint": {
@@ -784,8 +781,8 @@
     "_target": null,
     "_left": 0,
     "_right": 0,
-    "_top": 1.1368683772161603e-13,
-    "_bottom": 1.1368683772161603e-13,
+    "_top": -1.1368683772161603e-13,
+    "_bottom": -1.1368683772161603e-13,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
     "_isAbsLeft": true,
@@ -825,11 +822,8 @@
     "octree": {
       "__id__": 28
     },
-    "skin": {
-      "__id__": 29
-    },
     "lightProbeInfo": {
-      "__id__": 30
+      "__id__": 29
     },
     "bakedWithStationaryMainLight": false,
     "bakedWithHighpLightmap": false
@@ -968,12 +962,6 @@
     "_depth": 8
   },
   {
-    "__type__": "cc.SkinInfo",
-    "_enabled": true,
-    "_blurRadius": 0.01,
-    "_sssIntensity": 3
-  },
-  {
     "__type__": "cc.LightProbeInfo",
     "_giScale": 1,
     "_giSamples": 1024,
@@ -982,7 +970,6 @@
     "_showProbe": true,
     "_showWireframe": true,
     "_showConvex": false,
-    "_data": null,
-    "_lightProbeSphereVolume": 1
+    "_data": null
   }
 ]

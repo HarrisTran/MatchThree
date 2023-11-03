@@ -158,7 +158,7 @@ export class Board extends Component {
                 isCanMove = false;
             }
         }else{
-            this.DestroyAllMatches(this.matcher.MarkAllRow(0));
+            this.RemoveForSpecialFruit();
             isCanMove = true;
         }
 
@@ -166,11 +166,20 @@ export class Board extends Component {
     }
 
     private RemoveForSpecialFruit(){
-        if(this.secondChoosed.IsStraingerBomb() && this.firstChoosed.IsStraingerBomb()){
-            this.DestroyAllMatches(this.matcher.MarkAllRow(this.secondChoosed.position2D.x));
-            this.DestroyAllMatches(this.matcher.MarkAllColumn(this.secondChoosed.position2D.y));
-        }else if (this.secondChoosed.IsStraingerBomb()){
+        for(let f of [this.firstChoosed,this.secondChoosed]){
+            this.PerformSpecialFruit(f);
+        }
+    }
 
+    private PerformSpecialFruit(f: Fruit){
+        if(f.typeFruit == TypeFruit.BOMB_HORIZONAL){
+            this.DestroyAllMatches(this.matcher.MarkAllRow(f.position2D.x));
+        }
+        if(f.typeFruit == TypeFruit.BOMB_VERTICAL){
+            this.DestroyAllMatches(this.matcher.MarkAllColumn(f.position2D.y));
+        }
+        if(f.typeFruit == TypeFruit.RAINBOW){
+            this.DestroyAllMatches(this.matcher.MarkAllSameType(this.firstChoosed,this.secondChoosed));
         }
     }
 
@@ -207,7 +216,7 @@ export class Board extends Component {
 
     private DestroyMatchedFruitAt(x: number, y: number) {
         let fruit = this.AllFruit[x][y];
-        if (fruit && fruit.isMatched) {
+        if (fruit?.isMatched) {
             fruit.node.destroy();
             MainGameManager.instance.Score = fruit.getScoreReward();
             this.setScore();
@@ -263,9 +272,30 @@ export class Board extends Component {
         return this.AllFruit.map(row => row[i]);
     }
 
-    private getFruitOnPostion(pos: Grid2D) {
-        return this.AllFruit[pos.x][pos.y];
+    public getColor(type: TypeFruit){
+        let fruits : Array<Fruit> = new Array();
+        for(let i = 0;i < this.AllFruit.length; i++){
+            for (let j = 0; j < this.AllFruit[0].length; j++) {
+                if(this.AllFruit[i][j].typeFruit == type){
+                    fruits.push(this.AllFruit[i][j]);
+                }
+            }
+        }
+        return fruits;
     }
+
+    public getArea(pos: Grid2D){
+        let fruits : Array<Fruit> = new Array();
+        for(let i = pos.x - 2; i < pos.x + 2; i++){
+            for (let j = pos.y - 2; j < pos.y + 2; j++) {
+                if(this.IsPositionOnBoard(new Grid2D(i,j))){
+                    fruits.push(this.AllFruit[i][j]);
+                }
+            }
+        }
+        return fruits;
+    }
+
 
     private setScore() {
         this.scoreText.string = MainGameManager.instance.Score.toString();
