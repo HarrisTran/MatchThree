@@ -1,8 +1,17 @@
 import { _decorator, Component, Node } from 'cc';
 import { Board } from './Board';
-import { areCollinearPoints, DistinctList } from './Util';
+import { DistinctList } from './Util';
 import { Fruit, TypeFruit } from './Match3Component/Fruit';
 import { Grid2D } from './Match3Component/Grid2D';
+import { CombinationResult, FruitCombination } from './Match3Combination/CombinationBase';
+import { FiveHorizonalCombination } from './Match3Combination/CombinationChild/FiveHorizonalCombination';
+import { FiveVerticalCombination } from './Match3Combination/CombinationChild/FiveVerticalCombination';
+import { FourHorizonalCombination } from './Match3Combination/CombinationChild/FourHorizonalCombination';
+import { FourVerticalCombination } from './Match3Combination/CombinationChild/FourVerticalCombination';
+import { LShapeCombination } from './Match3Combination/CombinationChild/LShapeCombination';
+import { TShapeCombination } from './Match3Combination/CombinationChild/TShapeCombination';
+import { ThreeHorizonalCombination } from './Match3Combination/CombinationChild/ThreeHorizonalCombination';
+import { ThreeVerticalCombination } from './Match3Combination/CombinationChild/ThreeVerticalCombination';
 const { ccclass, property } = _decorator;
 
 @ccclass('MatchMachine')
@@ -12,6 +21,74 @@ export class MatchMachine extends Component {
 
     private listAllMatch: DistinctList<Fruit> = new DistinctList<Fruit>();
     private listAllSpecialPosition: DistinctList<GroupOfFruit> = new DistinctList<GroupOfFruit>();
+    public m_baseCombination : FruitCombination[];
+
+    protected start(): void {
+        this.m_baseCombination = [new FiveHorizonalCombination(), new FiveVerticalCombination(),
+                                  new FourHorizonalCombination(), new FourVerticalCombination(),
+                                  new ThreeHorizonalCombination(), new ThreeVerticalCombination(),
+                                  new TShapeCombination(), new LShapeCombination()];
+    }
+
+    public FindFruitCombinations(fruits: Fruit[]){
+        for(let fruit of fruits){
+            fruit.resetLookup();
+        }
+
+        let list : CombinationResult[] = [];
+
+        for(let combo of this.m_baseCombination){
+            for(let fruit of fruits){
+                if(this.ValidateCombination(combo,fruit)){
+                    
+                    list.push(combo.GetResult());
+                }
+            }
+        }
+        // use to test : this.ValidateCombination(this.m_baseCombination[4],this.board.AllFruit[4][2]);
+
+        return list;
+    }
+
+    public ValidateCombination(combination: FruitCombination, fruit: Fruit): boolean{
+        let test = true;
+
+        let fruitResult = this.board.FindRange(fruit,combination.LookupRange());
+        
+        for(let fruit of fruitResult){
+            console.log(fruit.position2D);
+            
+        }
+
+        if(fruitResult == null) return false;
+        if(fruitResult.length < 3) return false;
+
+        combination.typeFruit = fruit.typeFruit;
+        combination.foundFruits = fruitResult;
+
+
+        // for(let fruit of fruitResult){
+        //     if(!combination.Test(fruit)){
+        //         test = false;
+        //         break;
+        //     }
+        // }
+        console.log(fruitResult);
+        
+
+
+        
+
+        if(test){
+            
+            for(let fruit of fruitResult){
+                combination.LookupChange(fruit);
+            }
+        }
+        
+        
+        return test;
+    }
 
     public get ListAllMatch() {
         this.listAllMatch.clear();
@@ -96,14 +173,13 @@ export class MatchMachine extends Component {
     }
 
     public MarkAndAddSpecialFruit(matchedPositions : Fruit[], rowCount: number, columnCount: number){
-        console.log(rowCount,columnCount);
         
         
         if (rowCount == 4 || columnCount == 4) {
             this.listAllSpecialPosition.add(new GroupOfFruit(TypeFruit.RAINBOW, matchedPositions));
         }
         else if(rowCount >= 2 || columnCount >= 2){
-            console.log("BOMB!");
+            console.log("--------------------------------------------------------------");
         }else if(rowCount == 3 && columnCount <= 1){
             this.listAllSpecialPosition.add(new GroupOfFruit(TypeFruit.BOMB_HORIZONAL, matchedPositions));
         }else if(columnCount == 3 && rowCount <= 1){
@@ -173,80 +249,3 @@ export class GroupOfFruit {
     }
 }
 
-
-
-
-
-type Point2D = { x: number, y: number };
-type PatternConfig = { pattern: number[][], name: string };
-
-function detectPattern(points: Point2D[]): string {
-  const patterns: PatternConfig[] = [
-    {
-      pattern: [
-        [ 0, 1, 0 ],
-        [ 1, 1, 1 ],
-        [ 0, 1, 0 ]
-      ],
-      name: "Plus shape"
-    },
-    {
-      pattern: [
-        [ 0, 1, 0 ],
-        [ 0, 1, 0 ],
-        [ 0, 1, 0 ]
-      ],
-      name: "Line shape"
-    },
-    {
-      pattern: [
-        [ 1, 1 ],
-        [ 1, 1 ]
-      ],
-      name: "Square shape"
-    },
-    {
-      pattern: [
-        [ 0, 1, 0 ],
-        [ 1, 1, 1 ],
-        [ 0, 1, 0 ]
-      ],
-      name: "Cross shape"
-    }
-  ];
-
-  const minX = Math.min(...points.map(point => point.x));
-  const minY = Math.min(...points.map(point => point.y));
-
-  const patternWidth = patterns[0].pattern[0].length;
-  const patternHeight = patterns[0].pattern.length;
-
-  for (const { pattern, name } of patterns) {
-    for (let i = 0; i <= points.length - patternHeight; i++) {
-      for (let j = 0; j <= points[0].x - minX - patternWidth; j++) {
-        let isPatternMatched = true;
-
-        for (let k = 0; k < patternHeight; k++) {
-          for (let l = 0; l < patternWidth; l++) {
-            const currentPoint = points.find(point => point.x === minX + j + l && point.y === minY + i + k);
-
-            if ((pattern[k][l] === 1 && !currentPoint) || (pattern[k][l] === 0 && currentPoint)) {
-              isPatternMatched = false;
-              break;
-            }
-          }
-
-          if (!isPatternMatched) {
-            break;
-          }
-        }
-
-        if (isPatternMatched) {
-          return name;
-        }
-      }
-    }
-  }
-
-  return "Unknown shape";
-}

@@ -29,6 +29,9 @@ export class MainGameManager extends Component {
     public verticalRocket : Prefab = null;
 
     @property({group: {name: "Special Prefabs", id : "1"}, type: Prefab})
+    public areaBomb : Prefab = null;
+
+    @property({group: {name: "Special Prefabs", id : "1"}, type: Prefab})
     public rainbowBomb : Prefab = null;
 
 

@@ -14,6 +14,7 @@ export enum TypeFruit{
     ORANGE ,
     BOMB_VERTICAL ,
     BOMB_HORIZONAL ,
+    BOMB_SQUARE,
     RAINBOW ,
 }
 
@@ -34,10 +35,15 @@ export class Fruit extends Component {
 
     public position2D: Grid2D = null;
 
-    public isNormalType: boolean = true;
     public isMatched: boolean = false;
     private startPosition: Vec2 = null;
     private endPosition: Vec2 = null;
+
+    public lookupVertical: boolean;
+    public lookupHorizontal: boolean;
+    public lookupLshape: boolean;
+    public lookupTshape: boolean;
+
     protected matchUI : Board;
     private timeThreshold: number = 0.25;
 
@@ -45,6 +51,13 @@ export class Fruit extends Component {
         this.matchUI = find("Canvas").getComponent(Board);
         this.node.on(Node.EventType.TOUCH_START, this.onTouchStart, this);
         this.node.on(Node.EventType.TOUCH_CANCEL, this.onTouchCancel, this);
+    }
+
+    public resetLookup(){
+        this.lookupHorizontal = false;
+        this.lookupLshape = false;
+        this.lookupVertical = false;
+        this.lookupTshape = false;
     }
 
     public compareTo(other: Fruit){
@@ -112,8 +125,15 @@ export class Fruit extends Component {
         this.node.off(Node.EventType.TOUCH_END, this.onTouchCancel, this);
     }
 
-    public IsStraingerBomb(): boolean{
-        return this.typeFruit == TypeFruit.BOMB_HORIZONAL || this.typeFruit == TypeFruit.BOMB_VERTICAL;
+    public isNormal(): boolean{
+        return this.typeFruit == TypeFruit.APPLE || 
+        this.typeFruit == TypeFruit.BANANA ||
+        this.typeFruit == TypeFruit.BLUE ||
+        this.typeFruit == TypeFruit.COCONUT ||
+        this.typeFruit == TypeFruit.GRAPES ||
+        this.typeFruit == TypeFruit.MELON ||
+        this.typeFruit == TypeFruit.ORANGE;
+
     }
 
 }

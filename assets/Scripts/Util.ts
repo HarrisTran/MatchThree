@@ -1,6 +1,5 @@
 import { Vec3, math } from "cc";
 import { Grid2D } from "./Match3Component/Grid2D";
-import { PredefinedTetrominoData } from "./Match3Component/TetrominoDefinedData";
 
 export function convertTo2DArray<T>(arr: T[], rows: number, columns: number): T[][] {
     if (arr.length !== rows * columns) {
@@ -16,6 +15,15 @@ export function convertTo2DArray<T>(arr: T[], rows: number, columns: number): T[
     return result;
 }
 
+export function convertTo1DArray<T>(arr: T[][]) : T[]{
+    let result : T[] = [];
+    for(let i of arr){
+        for(let j of i){
+            result.push(j);
+        }
+    }
+    return result;
+}
 
 /**
 * This function check if array of point is on single line.

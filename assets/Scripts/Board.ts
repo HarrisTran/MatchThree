@@ -1,11 +1,20 @@
 import { _decorator, Component, find, instantiate, Label, Layout, Node, Prefab, Size, Vec3 } from 'cc';
 import { Fruit, MoveDirection, TypeFruit } from './Match3Component/Fruit';
 import { Grid2D } from './Match3Component/Grid2D';
-import { convertTo2DArray, delay, DistinctList, randomInRange } from './Util';
+import { convertTo1DArray, convertTo2DArray, delay, DistinctList, randomInRange } from './Util';
 import { MainGameManager } from './MainGameManager';
 import { InterfaceMatchMachine } from './MatchMachine';
 import { NormalFruit } from './Match3Component/NormalFruit';
 import { SpecialFruit } from './Match3Component/SpecialFruit';
+import { FruitCombination } from './Match3Combination/CombinationBase';
+import { FiveHorizonalCombination } from './Match3Combination/CombinationChild/FiveHorizonalCombination';
+import { FiveVerticalCombination } from './Match3Combination/CombinationChild/FiveVerticalCombination';
+import { FourHorizonalCombination } from './Match3Combination/CombinationChild/FourHorizonalCombination';
+import { FourVerticalCombination } from './Match3Combination/CombinationChild/FourVerticalCombination';
+import { ThreeHorizonalCombination } from './Match3Combination/CombinationChild/ThreeHorizonalCombination';
+import { ThreeVerticalCombination } from './Match3Combination/CombinationChild/ThreeVerticalCombination';
+import { TShapeCombination } from './Match3Combination/CombinationChild/TShapeCombination';
+import { LShapeCombination } from './Match3Combination/CombinationChild/LShapeCombination';
 const { ccclass, property } = _decorator;
 
 @ccclass('Board')
@@ -32,12 +41,15 @@ export class Board extends Component {
 
     public AllFruit: Fruit[][] = [];
     public GridCoodinator: Vec3[][] = [];
+    
 
     protected onLoad(): void {
         this.matcher = find("Canvas/TileLayout").getComponent("MatchMachine") as InterfaceMatchMachine;
         this.initializeGridUI();
         this.initializeTile();
     }
+
+    
 
     private initializeGridUI() {
         for (let i = 0; i < this.sizeBoard.x; i++) {
@@ -74,7 +86,6 @@ export class Board extends Component {
         o.parent = this.tileLayout;
 
         this.AllFruit[x][y] = o.getComponent(NormalFruit);
-        this.AllFruit[x][y].isNormalType = true;
         this.AllFruit[x][y].position2D = new Grid2D(x, y);
     }
 
@@ -90,11 +101,13 @@ export class Board extends Component {
         else if (specialType === TypeFruit.RAINBOW) {
             o = instantiate(MainGameManager.instance.rainbowBomb);
         }
+        else if (specialType === TypeFruit.BOMB_SQUARE) {
+            o = instantiate(MainGameManager.instance.areaBomb);
+        }
         o.setPosition(localPosWithOffset);
         o.parent = this.tileLayout;
 
         this.AllFruit[x][y] = o.getComponent(SpecialFruit);
-        this.AllFruit[x][y].isNormalType = false;
         this.AllFruit[x][y].position2D = new Grid2D(x, y);
     }
 
@@ -144,17 +157,45 @@ export class Board extends Component {
         }
     }
 
+    public FindRange(fruit: Fruit, lookup: [number,number][][]) : Fruit[]{
+        let result : Fruit[] = [];    
+            
+        for(let pattern of lookup){
+            let result : Fruit[] = [fruit];
+            for(let offset of pattern){
+                let newRow = fruit.position2D.x + offset[1];
+                let newColumn = fruit.position2D.y + offset[0];
+                if(this.IsPositionOnBoard(new Grid2D(newRow, newColumn)) && result[0].compareTo(this.AllFruit[newRow][newColumn])){
+                    result.push(this.AllFruit[newRow][newColumn]);
+                }else{
+                    break;
+                }
+            }
+
+            if(result.length === pattern.length){
+                return result;
+            }
+        }
+        
+        return result;
+    }
+
 
     private CheckMove(): boolean {
         let isCanMove: boolean = false;
-        let lstMatch = this.matcher.ListAllMatch.getList();
+        //let lstMatch = this.matcher.ListAllMatch.getList();
+        let lstMatch = this.matcher.FindFruitCombinations(convertTo1DArray(this.AllFruit));
+        
 
-        if(this.secondChoosed.isNormalType && this.firstChoosed.isNormalType){
+        if(this.secondChoosed.isNormal() && this.firstChoosed.isNormal()){
             if (lstMatch?.length > 0) {
-                this.DestroyAllMatches(lstMatch);
+                console.log("+++++++++++++",lstMatch);
+                
+                //this.DestroyAllMatches(lstMatch);
                 isCanMove = true;
                 //return true;
             } else {
+                console.log("-------------",[]);
                 isCanMove = false;
             }
         }else{
