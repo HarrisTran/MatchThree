@@ -291,21 +291,20 @@ export class Board extends Component {
             })
         }
         if(f.typeFruit == TypeFruit.RAINBOW){
-            // this.getColor([this.firstChoosed,this.secondChoosed].find(o=>o.typeFruit !== TypeFruit.RAINBOW)).forEach(o=>{
-            //     o.inCombination = true;
-            //     this.DestroyMatchedFruitAt(o.position2D.x,o.position2D.y);
-            // })
+            let box : Fruit[] = [];
 
-            let x : Fruit [] = [this.firstChoosed,this.secondChoosed];
-            x.forEach(r => {
-                r.inCombination = true;
-                this.DestroyMatchedFruitAt(r.position2D.x,r.position2D.y);
-                if(r.typeFruit == TypeFruit.RAINBOW){
-                    this.getColor(r).forEach(t => {
-                        t.inCombination = true;
-                        this.DestroyMatchedFruitAt(t.position2D.x,t.position2D.y);
-                    })
-                }
+            if(this.firstChoosed.typeFruit == TypeFruit.RAINBOW && this.secondChoosed.typeFruit != TypeFruit.RAINBOW){
+                box = this.getColor(this.secondChoosed);
+                box.push(this.firstChoosed);
+            }
+            if(this.firstChoosed.typeFruit != TypeFruit.RAINBOW && this.secondChoosed.typeFruit == TypeFruit.RAINBOW){
+                box = this.getColor(this.firstChoosed);
+                box.push(this.secondChoosed);
+            }
+
+            box.forEach(e => {
+                e.inCombination = true;
+                this.DestroyMatchedFruitAt(e.position2D.x,e.position2D.y);
             })
 
         }
