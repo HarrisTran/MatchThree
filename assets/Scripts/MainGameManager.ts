@@ -29,10 +29,13 @@ export class MainGameManager extends Component {
     public verticalRocket : Prefab = null;
 
     @property({group: {name: "Special Prefabs", id : "1"}, type: Prefab})
-    public areaBomb : Prefab = null;
+    public squareBomb : Prefab = null;
 
     @property({group: {name: "Special Prefabs", id : "1"}, type: Prefab})
     public rainbowBomb : Prefab = null;
+
+    @property({group: {name: "Logo Prefabs", id : "2"}, type: Prefab})
+    public LogoPrefab : Prefab = null;
 
 
     private static _instance : MainGameManager;

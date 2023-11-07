@@ -127,12 +127,16 @@
       "__uuid__": "86c4578a-efbc-40d0-872a-29534706dbb8",
       "__expectedType__": "cc.Prefab"
     },
-    "areaBomb": {
+    "squareBomb": {
       "__uuid__": "7b64363a-fd17-4df3-9fbc-00470c1f5916",
       "__expectedType__": "cc.Prefab"
     },
     "rainbowBomb": {
       "__uuid__": "141582e0-c571-4210-b639-308724ca1438",
+      "__expectedType__": "cc.Prefab"
+    },
+    "LogoPrefab": {
+      "__uuid__": "ce4cf82e-6f24-40e7-a22a-8e96fb8acfaf",
       "__expectedType__": "cc.Prefab"
     },
     "_id": "49CxhCHAhLWY+d2IY0iue1"
@@ -169,7 +173,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 540,
-      "y": 959.9999999999999,
+      "y": 960.0000000000001,
       "z": 0
     },
     "_lrot": {
@@ -254,7 +258,7 @@
     "_priority": 1073741824,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 960,
+    "_orthoHeight": 960.0000000000001,
     "_near": 1,
     "_far": 2000,
     "_color": {
@@ -785,8 +789,8 @@
     "_target": null,
     "_left": 0,
     "_right": 0,
-    "_top": -1.1368683772161603e-13,
-    "_bottom": -1.1368683772161603e-13,
+    "_top": 1.1368683772161603e-13,
+    "_bottom": 1.1368683772161603e-13,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
     "_isAbsLeft": true,

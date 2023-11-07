@@ -1,4 +1,4 @@
-import { _decorator, CCInteger, Component, Enum, EventTouch, find, math, Node, tween, Vec2, Vec3 } from 'cc';
+import { _decorator, CCBoolean, CCInteger, Component, Enum, EventTouch, find, log, math, Node, tween, Vec2, Vec3 } from 'cc';
 import { Grid2D } from './Grid2D';
 import { Board } from '../Board';
 import { easingMovement } from '../Util';
@@ -16,6 +16,7 @@ export enum TypeFruit{
     BOMB_HORIZONAL ,
     BOMB_SQUARE,
     RAINBOW ,
+    LOGO,
 }
 
 export enum MoveDirection {
@@ -33,16 +34,16 @@ export class Fruit extends Component {
     @property(CCInteger)
     private scoreReward: number = 0;
 
+    @property(CCBoolean)
+    public isLogo: boolean = false;
+
     public position2D: Grid2D = null;
 
     public isMatched: boolean = false;
     private startPosition: Vec2 = null;
     private endPosition: Vec2 = null;
 
-    public lookupVertical: boolean;
-    public lookupHorizontal: boolean;
-    public lookupLshape: boolean;
-    public lookupTshape: boolean;
+    public inCombination : boolean = false;
 
     protected matchUI : Board;
     private timeThreshold: number = 0.25;
@@ -54,14 +55,10 @@ export class Fruit extends Component {
     }
 
     public resetLookup(){
-        this.lookupHorizontal = false;
-        this.lookupLshape = false;
-        this.lookupVertical = false;
-        this.lookupTshape = false;
+        this.inCombination = false;
     }
 
     public compareTo(other: Fruit){
-        if(!other) return false;
         return this.typeFruit === other.typeFruit;
     }
 
@@ -85,6 +82,7 @@ export class Fruit extends Component {
     }
 
     protected onTouchCancel(event: EventTouch){
+        if(this.isLogo) return;
         this.endPosition = event.getLocation();
         this.movingDecision();
     }

@@ -1,18 +1,24 @@
 import { Fruit } from "../../Match3Component/Fruit";
-import { FruitCombination } from "../CombinationBase";
+import { Grid2D } from "../../Match3Component/Grid2D";
+import { FruitCombination, TypeCombination } from "../CombinationBase";
 
 export class FourVerticalCombination extends FruitCombination {
-    public LookupChange(fruit: Fruit): void 
+    public readonly NAME : string = TypeCombination.FOUR_VERTICAL;
+    public CombinationSize(): number 
     {
-        fruit.lookupVertical = true;
+        return 4;
     }
 
     public LookupRange(): [number,number][][] 
     {
         return [
-            [[0,1],[0,2],[0,3]],
+            [[1,0],
+             [0,0],
+             [2,0],
+             [3,0]],
         ]
     }
+
 
     public Priority(): number {
         return 2;
@@ -20,11 +26,9 @@ export class FourVerticalCombination extends FruitCombination {
 
     public Test(fruit: Fruit): boolean 
     {
-        if(fruit.lookupLshape || fruit.lookupHorizontal || fruit.lookupTshape || this.foundFruits.length != 4){
-            console.log("=================");
+        if(fruit.inCombination || this.foundFruits.length != this.CombinationSize()){
             return false;
         }
-        console.log(this.typeFruit , fruit.typeFruit);
         return this.typeFruit === fruit.typeFruit;
     }
     public Points(): number {

@@ -1,9 +1,8 @@
 [
   {
     "__type__": "cc.Prefab",
-    "_name": "Blue",
+    "_name": "RainbowBomb",
     "_objFlags": 0,
-    "__editorExtras__": {},
     "_native": "",
     "data": {
       "__id__": 1
@@ -13,7 +12,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Blue",
+    "_name": "RainbowBomb",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": null,
@@ -76,8 +75,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 93,
-      "height": 95
+      "width": 80,
+      "height": 100
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -88,7 +87,7 @@
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "59ioXKUxNFO7FEBH4JmwgB"
+    "fileId": "60116kgPFJfJTcyLHohBt3"
   },
   {
     "__type__": "cc.Sprite",
@@ -113,12 +112,12 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "e34c793b-7192-4ca6-9127-969da1f08d78@f9941",
+      "__uuid__": "8664836a-28bd-4d63-9fc4-640bc6f1e579@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 0,
     "_fillType": 0,
-    "_sizeMode": 1,
+    "_sizeMode": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",
       "x": 0,
@@ -133,10 +132,10 @@
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "310aV1fQNLrqd6zWoC7WQA"
+    "fileId": "65wQgOqXNMlLwke5JD7My/"
   },
   {
-    "__type__": "ea9dbFzt5RBjq1GVNOOtclW",
+    "__type__": "b39788dWlVOeq23jMghodw6",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -147,13 +146,14 @@
     "__prefab": {
       "__id__": 7
     },
-    "typeFruit": 2,
+    "typeFruit": 10,
     "scoreReward": 10,
+    "isLogo": false,
     "_id": ""
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "0b9k4xkptCfYfZwy+gvDS6"
+    "fileId": "92cOcrzN9K1pofCJZ81V8S"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -163,7 +163,7 @@
     "asset": {
       "__id__": 0
     },
-    "fileId": "a4Fggn9TdIPahhTm6lp/sJ",
+    "fileId": "4fpizAV7dJzLvA7JvD9XXI",
     "instance": null,
     "targetOverrides": null
   }
