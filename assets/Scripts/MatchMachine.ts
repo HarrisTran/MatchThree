@@ -19,16 +19,24 @@ export class MatchMachine extends Component {
     public m_baseCombination: FruitCombination[];
 
     protected start(): void {
-        this.m_baseCombination = [new FiveHorizonalCombination(), new FiveVerticalCombination(),
-        new TShapeCombination(), new LShapeCombination(),
-        new FourHorizonalCombination(), new FourVerticalCombination(),
-        new ThreeHorizonalCombination(), new ThreeVerticalCombination()];
+        this.m_baseCombination = [
+            new FiveHorizonalCombination(), 
+            new FiveVerticalCombination(),
+            new TShapeCombination(), 
+            new LShapeCombination(),
+            new FourHorizonalCombination(), 
+            new FourVerticalCombination(),
+            new ThreeHorizonalCombination(), 
+            new ThreeVerticalCombination()
+        ];
+
+        this.m_baseCombination.sort((a,b) => b.Priority() - a.Priority());
+        
     }
 
     public FindFruitCombinations(fruits: Fruit[]) {
         for (let fruit of fruits) {
-            fruit.resetLookup();
-            
+            fruit.CanDestroy = false;
         }
 
         let list: CombinationResult[] = [];
@@ -50,8 +58,7 @@ export class MatchMachine extends Component {
         
         let fruitResult = this.board.FindRange(fruit, combination);
 
-        if (fruitResult == null) return false;
-        if (fruitResult.length < 3) return false;
+        if (fruitResult == null || fruitResult.length < 3) return false;
 
         combination.typeFruit = fruit.typeFruit;
         combination.foundFruits = fruitResult;
@@ -71,19 +78,4 @@ export class MatchMachine extends Component {
 
         return test;
     }
-
-    
-
 }
-
-export interface InterfaceMatchMachine extends MatchMachine { }
-
-export class GroupOfFruit {
-    typeTile: TypeFruit;
-    tileCluster: Fruit[];
-    constructor(typeTile: TypeFruit, tiles: Fruit[]) {
-        this.typeTile = typeTile;
-        this.tileCluster = tiles;
-    }
-}
-

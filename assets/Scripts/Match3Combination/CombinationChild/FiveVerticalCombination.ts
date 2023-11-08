@@ -30,7 +30,7 @@ export class FiveVerticalCombination extends FruitCombination {
 
     public Test(fruit: Fruit): boolean 
     {
-        if(fruit.inCombination || this.foundFruits.length != this.CombinationSize()){
+        if(fruit.CanDestroy || this.foundFruits.length != this.CombinationSize()){
             return false;
         }
         return this.typeFruit === fruit.typeFruit;

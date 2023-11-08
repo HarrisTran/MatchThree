@@ -5,10 +5,6 @@ const { ccclass, property } = _decorator;
 @ccclass('SpecialFruit')
 export class SpecialFruit extends Fruit {
 
-    protected onDestroy(): void {
-        super.onDestroy();
-    }
-
 }
 
 

@@ -14,4 +14,8 @@ export class Grid2D  {
     public clone(){
         return new Grid2D(this.x, this.y);
     }
+
+    public compareTo(other : Grid2D){
+        return this.x === other.x && this.y === other.y;
+    }
 }

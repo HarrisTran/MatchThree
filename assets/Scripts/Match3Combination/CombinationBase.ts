@@ -39,6 +39,6 @@ export abstract class FruitCombination
 
     public LookupChange(fruit: Fruit)
     {
-        fruit.inCombination = true;
+        fruit.CanDestroy = true;
     }
 }

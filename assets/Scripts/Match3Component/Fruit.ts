@@ -39,11 +39,10 @@ export class Fruit extends Component {
 
     public position2D: Grid2D = null;
 
-    public isMatched: boolean = false;
     private startPosition: Vec2 = null;
     private endPosition: Vec2 = null;
 
-    public inCombination : boolean = false;
+    private canDestroy : boolean = false;
 
     protected matchUI : Board;
     private timeThreshold: number = 0.25;
@@ -52,10 +51,6 @@ export class Fruit extends Component {
         this.matchUI = find("Canvas").getComponent(Board);
         this.node.on(Node.EventType.TOUCH_START, this.onTouchStart, this);
         this.node.on(Node.EventType.TOUCH_CANCEL, this.onTouchCancel, this);
-    }
-
-    public resetLookup(){
-        this.inCombination = false;
     }
 
     public compareTo(other: Fruit){
@@ -71,6 +66,19 @@ export class Fruit extends Component {
         let temp = this.position2D;
         this.moveTo(other.position2D);
         other.moveTo(temp);
+    }
+
+    public set CanDestroy(b: boolean){
+        if(this.isLogo) return;
+        this.canDestroy = b;
+    }
+
+    public get CanDestroy(): boolean {
+        return this.canDestroy;
+    }
+
+    public forceDestroy(){
+        this.canDestroy = true;
     }
 
     protected moveTo(newPos: Grid2D){
