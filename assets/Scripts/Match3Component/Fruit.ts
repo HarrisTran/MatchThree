@@ -82,7 +82,6 @@ export class Fruit extends Component {
     }
 
     protected onTouchCancel(event: EventTouch){
-        if(this.isLogo) return;
         this.endPosition = event.getLocation();
         this.movingDecision();
     }
