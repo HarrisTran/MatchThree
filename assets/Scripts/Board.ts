@@ -282,10 +282,36 @@ export class Board extends Component {
                     this.AddRainbowBomb(position.x, position.y);
                     break;
                 case TypeCombination.FOUR_HORIZONAL:
-                    this.AddFourHorizonalBomb(position.x, position.y);
+                    let v : Fruit = null;
+                    for(let i of c.typeCombination.foundFruits)
+                    {
+                        for(let j of [this.firstChoosed, this.secondChoosed])
+                        {
+                            if(i.position2D.compareTo(j.position2D))
+                            {
+                                v = j;
+                                break;
+                            }
+                        }
+                    }
+                    if(v == null) v = c.typeCombination.foundFruits[0];
+                    this.AddFourHorizonalBomb(v.position2D.x, v.position2D.y);
                     break;
                 case TypeCombination.FOUR_VERTICAL:
-                    this.AddFourVerticalBomb(position.x, position.y);
+                    let u : Fruit = null;
+                    for(let i of c.typeCombination.foundFruits)
+                    {
+                        for(let j of [this.firstChoosed, this.secondChoosed])
+                        {
+                            if(i.position2D.compareTo(j.position2D))
+                            {
+                                u = j;
+                                break;
+                            }
+                        }
+                    }
+                    if(u == null) u = c.typeCombination.foundFruits[0];
+                    this.AddFourVerticalBomb(u.position2D.x, u.position2D.y);
                     break;
                 case TypeCombination.LSHAPE:
                 case TypeCombination.TSHAPE:

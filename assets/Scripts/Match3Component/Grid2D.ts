@@ -16,6 +16,7 @@ export class Grid2D  {
     }
 
     public compareTo(other : Grid2D){
+        if(!other) return false;
         return this.x === other.x && this.y === other.y;
     }
 }

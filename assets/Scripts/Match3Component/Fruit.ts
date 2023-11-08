@@ -81,7 +81,7 @@ export class Fruit extends Component {
         this.canDestroy = true;
     }
 
-    protected moveTo(newPos: Grid2D){
+    public moveTo(newPos: Grid2D){
         this.position2D = newPos;
     }
 

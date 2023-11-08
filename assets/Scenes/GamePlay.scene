@@ -3,7 +3,6 @@
     "__type__": "cc.SceneAsset",
     "_name": "GamePlay",
     "_objFlags": 0,
-    "__editorExtras__": {},
     "_native": "",
     "scene": {
       "__id__": 1
@@ -184,7 +183,7 @@
     "_priority": 1073741824,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 960,
+    "_orthoHeight": 1679.3063583815028,
     "_near": 1,
     "_far": 2000,
     "_color": {
@@ -210,8 +209,6 @@
     "_screenScale": 1,
     "_visibility": 41943040,
     "_targetTexture": null,
-    "_postProcess": null,
-    "_usePostProcess": false,
     "_cameraType": -1,
     "_trackingType": 0,
     "_id": "d9wlisM9xIW7BqTnBLLKfV"
@@ -485,7 +482,7 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 123.17997741699219,
+      "width": 123.18,
       "height": 75.6
     },
     "_anchorPoint": {
@@ -550,7 +547,7 @@
     "_alignFlags": 33,
     "_target": null,
     "_left": 0,
-    "_right": 29.57000122070312,
+    "_right": 29.56998992919921,
     "_top": 37.400000000000006,
     "_bottom": 0,
     "_horizontalCenter": 0,
@@ -645,7 +642,7 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 115.49996948242188,
+      "width": 43.8,
       "height": 75.6
     },
     "_anchorPoint": {
@@ -675,7 +672,7 @@
       "b": 255,
       "a": 255
     },
-    "_string": "100",
+    "_string": "0",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_actualFontSize": 60,
@@ -1128,11 +1125,8 @@
     "octree": {
       "__id__": 38
     },
-    "skin": {
-      "__id__": 39
-    },
     "lightProbeInfo": {
-      "__id__": 40
+      "__id__": 39
     },
     "bakedWithStationaryMainLight": false,
     "bakedWithHighpLightmap": false
@@ -1271,12 +1265,6 @@
     "_depth": 8
   },
   {
-    "__type__": "cc.SkinInfo",
-    "_enabled": true,
-    "_blurRadius": 0.01,
-    "_sssIntensity": 3
-  },
-  {
     "__type__": "cc.LightProbeInfo",
     "_giScale": 1,
     "_giSamples": 1024,
@@ -1285,7 +1273,6 @@
     "_showProbe": true,
     "_showWireframe": true,
     "_showConvex": false,
-    "_data": null,
-    "_lightProbeSphereVolume": 1
+    "_data": null
   }
 ]
