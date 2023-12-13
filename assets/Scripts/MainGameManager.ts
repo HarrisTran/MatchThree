@@ -82,11 +82,7 @@ export class MainGameManager extends Component {
     public getNormalFruitListPrefab() : Prefab[] {
         return this.fruitListPrefabs;
     }
-
-    public getSpecialFruitListPrefab() : Prefab[] {
-        return this.specialFruitListPrefabs;
-    }
-
+    
     public onShowGameOverPopup(){
         let popup = instantiate(this.gameOverPopup);
         popup.parent = find("Canvas");
