@@ -1,23 +1,10 @@
-import { _decorator, CCBoolean, CCInteger, Component, Enum, EventTouch, find, log, math, Node, tween, Vec2, Vec3 } from 'cc';
+import { _decorator, CCBoolean, CCInteger, Component, Enum, Event, Eventify, EventTarget, EventTouch, find, game, log, math, Node, PipelineEventProcessor, systemEvent, SystemEvent, tween, Vec2, Vec3 } from 'cc';
 import { Grid2D } from './Grid2D';
 import { Board } from '../Board';
 import { easingMovement } from '../Util';
+import { TypeFruit } from '../MainGameManager';
 const { ccclass, property } = _decorator;
 
-export enum TypeFruit{
-    APPLE = 0,
-    BANANA = 1,
-    BLUE ,
-    COCONUT ,
-    GRAPES ,
-    MELON ,
-    ORANGE ,
-    BOMB_VERTICAL ,
-    BOMB_HORIZONAL ,
-    BOMB_SQUARE,
-    RAINBOW ,
-    LOGO,
-}
 
 export enum MoveDirection {
     UP = 0,
@@ -45,7 +32,6 @@ export class Fruit extends Component {
     private canDestroy : boolean = false;
 
     protected matchUI : Board;
-    private timeThreshold: number = 0.25;
 
     protected onLoad(): void {
         this.matchUI = find("Canvas").getComponent(Board);
@@ -68,9 +54,9 @@ export class Fruit extends Component {
         other.moveTo(temp);
     }
 
-    public set CanDestroy(b: boolean){
+    public set CanDestroy(canDestroy: boolean){
         if(this.isLogo) return;
-        this.canDestroy = b;
+        this.canDestroy = canDestroy;
     }
 
     public get CanDestroy(): boolean {
@@ -100,6 +86,7 @@ export class Fruit extends Component {
 
         if(Math.abs(deltaX) > Math.abs(deltaY)){
             if(deltaX > 0){
+                
                 this.matchUI.swapTo(this,MoveDirection.RIGHT);
             }else{
                 this.matchUI.swapTo(this,MoveDirection.LEFT);
@@ -117,11 +104,7 @@ export class Fruit extends Component {
         let expectPosition = this.matchUI.GridCoodinator[this.position2D.x][this.position2D.y];
         let currentPosition = this.node.getPosition();
 
-        let newPosition = easingMovement(currentPosition,expectPosition,dt/this.timeThreshold,(x:number)=>{
-            return 1 - Math.pow(1-x,3);
-        })
-
-        this.node.setPosition(newPosition);
+        this.node.position = easingMovement(currentPosition,expectPosition,dt);
         this.matchUI.AllFruit[this.position2D.x][this.position2D.y] = this;
     }
 

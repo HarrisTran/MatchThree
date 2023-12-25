@@ -1,16 +1,13 @@
-import { Vec3, math } from "cc";
+import { Vec3, easing, math } from "cc";
 
-export function convertTo2DArray<T>(arr: T[], rows: number, columns: number): T[][] {
+export function convertTo2DArray(arr: Vec3[], rows: number, columns: number): Vec3[][] {
     if (arr.length !== rows * columns) {
         throw new Error("Invalid input: 1D array cannot be evenly divided into 2D array.");
     }
-
-    const result: T[][] = [];
-
+    const result: Vec3[][] = [];
     for (let i = 0; i < rows; i++) {
         result.push(arr.slice(i * columns, (i + 1) * columns));
     }
-
     return result;
 }
 
@@ -35,15 +32,15 @@ export function randomInRange<T>(arr: T[]): T {
     return arr[math.randomRangeInt(0, length)];
 }
 
-export function easingMovement(currentPosition: Vec3, expectPosition: Vec3, deltaT: number, easingFunction: (t: number) => number): Vec3 {
-    const easingOutput = easingFunction(deltaT);
+export function easingMovement(currentPosition: Vec3, expectPosition: Vec3, dt: number): Vec3 {
+    const easingOutput = easing.smooth(16*dt)
 
     return new Vec3(
         math.lerp(currentPosition.x, expectPosition.x, easingOutput),
-        math.lerp(currentPosition.y, expectPosition.y, easingOutput),
-        0
+        math.lerp(currentPosition.y, expectPosition.y, easingOutput)
     );
 }
+
 
 export function delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));

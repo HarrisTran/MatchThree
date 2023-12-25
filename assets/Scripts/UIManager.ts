@@ -1,17 +1,31 @@
-import { _decorator, Component, Label, Node } from 'cc';
+import { _decorator, CCInteger, Component, Label, Node } from 'cc';
 import { MainGameManager } from './MainGameManager';
 const { ccclass, property } = _decorator;
 
-@ccclass('TimeManager')
-export class TimeManager extends Component {
+@ccclass('UIManager')
+export class UIManager extends Component {
     @property(Label)
     private timerText : Label = null;
+
+    @property(Label)
+    private scoreText : Label = null;
+
+    @property(CCInteger)
+    countTime: number = 0;
 
     private _timeLeft: number;
     private _isActive: boolean = false;
 
     protected onLoad(): void {
-        this.startScreen(200);
+        this.startScreen(this.countTime);
+    }
+
+    public increaseTimeLeft(){
+        this._timeLeft += 15;
+    }
+
+    public decreaseTimeLeft(){
+        this._timeLeft -= 15;
     }
 
     public startScreen(time: number){
@@ -23,7 +37,9 @@ export class TimeManager extends Component {
     private onTimerReachedZero(){
         this._isActive = false;
         this.node.active = false;
-        MainGameManager.instance.onShowGameOverPopup();
+        //this.popup.setPosition(0,0,0);
+        
+        //MainGameManager.instance.onShowGameOverPopup();
     }
 
     protected update(dt: number): void {
@@ -38,6 +54,10 @@ export class TimeManager extends Component {
 
     private setTimer(time: number){
         this.timerText.string = Math.floor(time).toString()+"s";
+    }
+
+    showScore(n : number){
+        this.scoreText.string = `Score : ${n}`
     }
 }
 

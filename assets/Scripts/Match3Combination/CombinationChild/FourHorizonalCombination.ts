@@ -4,12 +4,8 @@ import { FruitCombination, TypeCombination } from "../CombinationBase";
 
 export class FourHorizonalCombination extends FruitCombination {
 
-    public readonly NAME : string = TypeCombination.FOUR_HORIZONAL;
+    public nameOfCombination: TypeCombination = TypeCombination.FOUR_HORIZONAL;
     
-    public CombinationSize(): number 
-    {
-        return 4;
-    }
 
     public LookupRange(): [number,number][][] 
     {
@@ -17,22 +13,17 @@ export class FourHorizonalCombination extends FruitCombination {
             [[0,1],[0,0],[0,2],[0,3]],
         ]
     }
-    public Priority(): number 
-    {
-        return 2;
+
+    public CombinationSize(): number {
+        return 4;
     }
 
     public Test(fruit: Fruit): boolean 
     {
-        if(fruit.CanDestroy || this.foundFruits.length != this.CombinationSize()){
+        if(fruit.CanDestroy || this.foundFruits.length != 4){
             return false;
         }
         return this.typeFruit === fruit.typeFruit;
     }
-
-    public Points(): number {
-        return 15;
-    }
-    
 }
 

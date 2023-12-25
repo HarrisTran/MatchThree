@@ -3,12 +3,9 @@ import { Grid2D } from "../../Match3Component/Grid2D";
 import { FruitCombination, TypeCombination } from "../CombinationBase";
 
 export class FourVerticalCombination extends FruitCombination {
-    public readonly NAME : string = TypeCombination.FOUR_VERTICAL;
-    public CombinationSize(): number 
-    {
-        return 4;
-    }
-
+    
+    public nameOfCombination: TypeCombination = TypeCombination.FOUR_VERTICAL;
+    
     public LookupRange(): [number,number][][] 
     {
         return [
@@ -20,19 +17,17 @@ export class FourVerticalCombination extends FruitCombination {
     }
 
 
-    public Priority(): number {
-        return 2;
+
+    public CombinationSize(): number {
+        return 4;
     }
 
     public Test(fruit: Fruit): boolean 
     {
-        if(fruit.CanDestroy || this.foundFruits.length != this.CombinationSize()){
+        if(fruit.CanDestroy || this.foundFruits.length != 4){
             return false;
         }
         return this.typeFruit === fruit.typeFruit;
-    }
-    public Points(): number {
-        return 15;
     }
     
 }

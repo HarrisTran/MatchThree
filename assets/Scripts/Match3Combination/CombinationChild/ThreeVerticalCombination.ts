@@ -4,11 +4,7 @@ import { FruitCombination, TypeCombination } from "../CombinationBase";
 
 export class ThreeVerticalCombination extends FruitCombination {
     
-    public readonly NAME : string = TypeCombination.THREE_VERTICAL;
-    public CombinationSize(): number 
-    {
-        return 3;
-    }
+    public nameOfCombination: TypeCombination = TypeCombination.THREE_VERTICAL;
 
     public LookupRange(): [number,number][][] 
     {
@@ -19,23 +15,17 @@ export class ThreeVerticalCombination extends FruitCombination {
         ]
     }
 
-    public Priority(): number 
-    {
-        return 1;
+    public CombinationSize(): number {
+        return 3;
     }
 
     public Test(fruit: Fruit): boolean 
     {
-        if(fruit.CanDestroy || this.foundFruits.length != this.CombinationSize()){
+        if(fruit.CanDestroy || this.foundFruits.length != 3){
             return false;
         }
         return this.typeFruit === fruit.typeFruit;
     }
 
-    public Points(): number 
-    {
-        return 5;
-    }
-    
 }
 

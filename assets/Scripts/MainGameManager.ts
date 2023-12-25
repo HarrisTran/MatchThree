@@ -3,24 +3,34 @@ import { GameOverPopup } from './GameOverPopup';
 const { ccclass, property } = _decorator;
 
 
-///////////////////////////// Match 3:
 
+export enum TypeFruit{
+    APPLE = 0,
+    BANANA = 1,
+    BLUE  ,
+    COCONUT ,
+    GRAPES ,
+    MELON ,
+    ORANGE ,
+    BOMB_VERTICAL ,
+    BOMB_HORIZONAL ,
+    BOMB_SQUARE ,
+    RAINBOW ,
+    
+    EXTRA_POINT,
+    INCREASE_TIME ,
+    DECREASE_TIME ,
+}
 
-// - Flow game (Man hình menu (PLay) => Ingame => GameOver Trả điểm)
-
-// - Hiển thị điểm
-
-// - Timer (đếm ngược đến khi game kết thúc - 60s)
-
-// - Item đặc biệt
-
-// - Item ngang/dọc
-
+class DataPlayer {
+    score: number;
+    constructor(){
+        this.score = 0;
+    }
+}
 
 @ccclass('MainGameManager')
 export class MainGameManager extends Component {
-    @property(Prefab)
-    private gameOverPopup : Prefab = null;
 
     @property({group: {name: "Special Prefabs", id : "1"}, type: Prefab})
     public horizonalRocket : Prefab = null;
@@ -34,16 +44,26 @@ export class MainGameManager extends Component {
     @property({group: {name: "Special Prefabs", id : "1"}, type: Prefab})
     public rainbowBomb : Prefab = null;
 
-    @property({group: {name: "Logo Prefabs", id : "2"}, type: Prefab})
-    public LogoPrefab : Prefab = null;
+    @property({type: Prefab})
+    public extraPointPrefab : Prefab = null;
 
+    @property({type: Prefab})
+    public decreaseTimePrefab : Prefab = null;
+
+    @property({type: Prefab})
+    public increaseTimePrefab : Prefab = null;
 
     private static _instance : MainGameManager;
     private static readonly NORMAL_FRUIT_PREFAB_PATH: string = "NormalFruit";
 
-    private fruitListPrefabs: Prefab[] = [];
-    private specialFruitListPrefabs: Prefab[] = [];
-    private score: number = 0;
+    //public fruitListPrefabs: Prefab[] = [];
+
+    public fruitMap : Map<string, Prefab> = new Map<string, Prefab>();
+    public normalFruitListName : string [] = [];
+    public specialFruitListName : string [] = [];
+    public extraFruitListName : string [] = [];
+
+    public userData: DataPlayer;
 
 
     public static get instance(): MainGameManager{
@@ -51,42 +71,39 @@ export class MainGameManager extends Component {
     }
 
     protected onLoad(): void {
-        this.score = 0;
         MainGameManager._instance = this;
         director.addPersistRootNode(this.node);
-    }
 
-    start() {
+        this.userData = new DataPlayer();
         resources.loadDir(MainGameManager.NORMAL_FRUIT_PREFAB_PATH, Prefab, (err: Error, data: Prefab[]) => {
             if(err) console.error("Can't load prefabs from empty path", err);
             else{
                 for(let prefab of data){
-                    this.fruitListPrefabs.push(prefab);
+                    this.normalFruitListName.push(prefab.name);
+                    this.fruitMap.set(prefab.name, prefab);
                 }
             }
         });
+
+        for(let prefab of [this.horizonalRocket,this.verticalRocket,this.squareBomb,this.rainbowBomb]){
+            this.specialFruitListName.push(prefab.name);
+            this.fruitMap.set(prefab.name, prefab);
+        }
+
+        for(let prefab of [this.increaseTimePrefab,this.decreaseTimePrefab,this.extraPointPrefab]){
+            this.extraFruitListName.push(prefab.name);
+            this.fruitMap.set(prefab.name, prefab);
+        }
     }
 
-    onClickStartButton(){
-        director.loadScene("GamePlay");
+    public getFruitByName(name: string) : Prefab{
+        return this.fruitMap.get(name);
     }
 
-    public get Score(){
-        return this.score;
-    }
-
-    public set Score(score: number) {
-        this.score += score;
-    }
-
-    public getNormalFruitListPrefab() : Prefab[] {
-        return this.fruitListPrefabs;
-    }
-    
-    public onShowGameOverPopup(){
-        let popup = instantiate(this.gameOverPopup);
-        popup.parent = find("Canvas");
-        popup.getComponent(GameOverPopup).onShowStart(this.Score);
+    public getRandomNormalFruit(): Prefab
+    {
+        let index = Math.floor(Math.random()*this.normalFruitListName.length);
+        return this.fruitMap.get(this.normalFruitListName[index]);
     }
 }
 

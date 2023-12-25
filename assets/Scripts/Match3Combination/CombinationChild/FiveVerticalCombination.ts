@@ -4,12 +4,7 @@ import { FruitCombination, TypeCombination } from "../CombinationBase";
 
 export class FiveVerticalCombination extends FruitCombination {
 
-    public readonly NAME : string = TypeCombination.FIVE_VERTICAL;
-
-    public CombinationSize(): number 
-    {
-        return 5;
-    }
+    public nameOfCombination: TypeCombination = TypeCombination.FIVE_VERTICAL;
 
     public LookupRange(): [number,number][][] 
     {
@@ -23,22 +18,16 @@ export class FiveVerticalCombination extends FruitCombination {
     }
 
 
-    public Priority(): number 
-    {
-        return 4;
+    public CombinationSize(): number {
+        return 5;
     }
 
     public Test(fruit: Fruit): boolean 
     {
-        if(fruit.CanDestroy || this.foundFruits.length != this.CombinationSize()){
+        if(fruit.CanDestroy || this.foundFruits.length != 5){
             return false;
         }
         return this.typeFruit === fruit.typeFruit;
-    }
-
-    public Points(): number 
-    {
-        return 20;
     }
     
 }

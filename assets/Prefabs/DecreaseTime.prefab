@@ -1,7 +1,7 @@
 [
   {
     "__type__": "cc.Prefab",
-    "_name": "Banana",
+    "_name": "DecreaseTime",
     "_objFlags": 0,
     "_native": "",
     "data": {
@@ -12,7 +12,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Banana",
+    "_name": "DecreaseTime",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": null,
@@ -65,7 +65,6 @@
     "__type__": "cc.UITransform",
     "_name": "",
     "_objFlags": 0,
-    "__editorExtras__": {},
     "node": {
       "__id__": 1
     },
@@ -75,8 +74,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 96,
-      "height": 107
+      "width": 90,
+      "height": 90
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -87,13 +86,12 @@
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "e2L8RaguJIlqz9WZyt3o4k"
+    "fileId": "c7hxXIseZPgJuGlf38/w4Z"
   },
   {
     "__type__": "cc.Sprite",
     "_name": "",
     "_objFlags": 0,
-    "__editorExtras__": {},
     "node": {
       "__id__": 1
     },
@@ -112,12 +110,12 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "28604611-f3d0-45c4-b258-934c83f62c27@f9941",
+      "__uuid__": "13f97235-c070-4d76-9987-c5989f65c36f@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 0,
     "_fillType": 0,
-    "_sizeMode": 1,
+    "_sizeMode": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",
       "x": 0,
@@ -132,13 +130,12 @@
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "68kcU8KNZGMZy/z7ml0SGP"
+    "fileId": "f4+o/8+UdE3osjD4DbFFgm"
   },
   {
-    "__type__": "ea9dbFzt5RBjq1GVNOOtclW",
+    "__type__": "fe1e37AovRO6afpdxkF0FNt",
     "_name": "",
     "_objFlags": 0,
-    "__editorExtras__": {},
     "node": {
       "__id__": 1
     },
@@ -146,14 +143,14 @@
     "__prefab": {
       "__id__": 7
     },
-    "typeFruit": 1,
-    "scoreReward": 10,
-    "isLogo": false,
+    "typeFruit": 13,
+    "scoreReward": 0,
+    "isLogo": true,
     "_id": ""
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "f1rsNFdSREWJvBSyVKH5Bv"
+    "fileId": "e3+fuMNplJr4TV7xfTZjGU"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -163,7 +160,7 @@
     "asset": {
       "__id__": 0
     },
-    "fileId": "3drhLm2k9AQoKZypBWcsLj",
+    "fileId": "04xvfIN7hGsZXfX7OMAXym",
     "instance": null,
     "targetOverrides": null
   }

@@ -1,7 +1,7 @@
-import { _decorator, Component, log, Node } from 'cc';
+import { _decorator, Component, log, Node, Size } from 'cc';
 import { Board } from './Board';
-import { Fruit, TypeFruit } from './Match3Component/Fruit';
-import { CombinationResult, FruitCombination } from './Match3Combination/CombinationBase';
+import { Fruit} from './Match3Component/Fruit';
+import { FruitCombination } from './Match3Combination/CombinationBase';
 import { FiveHorizonalCombination } from './Match3Combination/CombinationChild/FiveHorizonalCombination';
 import { FiveVerticalCombination } from './Match3Combination/CombinationChild/FiveVerticalCombination';
 import { FourHorizonalCombination } from './Match3Combination/CombinationChild/FourHorizonalCombination';
@@ -10,6 +10,7 @@ import { LShapeCombination } from './Match3Combination/CombinationChild/LShapeCo
 import { TShapeCombination } from './Match3Combination/CombinationChild/TShapeCombination';
 import { ThreeHorizonalCombination } from './Match3Combination/CombinationChild/ThreeHorizonalCombination';
 import { ThreeVerticalCombination } from './Match3Combination/CombinationChild/ThreeVerticalCombination';
+import { Grid2D } from './Match3Component/Grid2D';
 const { ccclass, property } = _decorator;
 
 @ccclass('MatchMachine')
@@ -18,20 +19,17 @@ export class MatchMachine extends Component {
     private board: Board;
     public m_baseCombination: FruitCombination[];
 
-    protected start(): void {
+    protected onLoad(): void {
         this.m_baseCombination = [
-            new FiveHorizonalCombination(), 
+            new FiveHorizonalCombination(),
             new FiveVerticalCombination(),
-            new TShapeCombination(), 
+            new TShapeCombination(),
             new LShapeCombination(),
-            new FourHorizonalCombination(), 
+            new FourHorizonalCombination(),
             new FourVerticalCombination(),
-            new ThreeHorizonalCombination(), 
+            new ThreeHorizonalCombination(),
             new ThreeVerticalCombination()
         ];
-
-        this.m_baseCombination.sort((a,b) => b.Priority() - a.Priority());
-        
     }
 
     public FindFruitCombinations(fruits: Fruit[]) {
@@ -39,16 +37,17 @@ export class MatchMachine extends Component {
             fruit.CanDestroy = false;
         }
 
-        let list: CombinationResult[] = [];
+        let list: FruitCombination[] = [];
 
         for (let combo of this.m_baseCombination) {
             for (let fruit of fruits) {
                 if(fruit.isLogo) continue;
                 if (this.ValidateCombination(combo, fruit)) {
-                    list.push(combo.GetResult());
+                    list.push(combo);
                 }
             }
         }
+        
         // use to test : this.ValidateCombination(this.m_baseCombination[4],this.board.AllFruit[4][2]);
         return list;
     }
@@ -72,7 +71,7 @@ export class MatchMachine extends Component {
 
         if (test) {
             for (let fruit of fruitResult) {
-                combination.LookupChange(fruit);
+                fruit.CanDestroy = true;
             }
         }
 

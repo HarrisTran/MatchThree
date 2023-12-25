@@ -3,7 +3,6 @@
     "__type__": "cc.Prefab",
     "_name": "Apple",
     "_objFlags": 0,
-    "__editorExtras__": {},
     "_native": "",
     "data": {
       "__id__": 1
@@ -149,6 +148,7 @@
     },
     "typeFruit": 0,
     "scoreReward": 10,
+    "isLogo": false,
     "_id": ""
   },
   {

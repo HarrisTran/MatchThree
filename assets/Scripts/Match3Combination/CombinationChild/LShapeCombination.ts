@@ -2,12 +2,7 @@ import { Fruit } from "../../Match3Component/Fruit";
 import { FruitCombination, TypeCombination } from "../CombinationBase";
 
 export class LShapeCombination extends FruitCombination {
-    public readonly NAME : string = TypeCombination.LSHAPE;
-    public CombinationSize(): number 
-    {
-        return 5;
-    }
-    
+    public nameOfCombination: TypeCombination = TypeCombination.LSHAPE;
 
     public LookupRange(): [number,number][][] 
     {
@@ -30,24 +25,19 @@ export class LShapeCombination extends FruitCombination {
         ]
     }
 
-
-    public Priority(): number 
-    {
-        return 3;
+    public CombinationSize(): number {
+        return 5;
     }
+
+
 
     public Test(fruit: Fruit): boolean 
     {
-        if(fruit.CanDestroy || this.foundFruits.length != this.CombinationSize()){
+        if(fruit.CanDestroy || this.foundFruits.length != 5){
             return false;
         }
         return this.typeFruit === fruit.typeFruit;
     }
 
-    public Points(): number 
-    {
-        return 15;
-    }
-    
 }
 
